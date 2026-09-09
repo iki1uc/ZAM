@@ -1,1 +1,16 @@
+function ZaM_KlicK_UI(LAGE){
+    const alpha = LAGE.alpha;
+    const beta  = LAGE.beta;
+    const gamma = LAGE.gamma;
+    const delta = LAGE.delta;
+
+    const mag6 = MAGISCHE_6(alpha, beta, gamma, delta);
+
+    return {
+        orbit: 360,
+        impulse: mag6,
+        modi: "ZaM.KlicK",
+        ui: "magische6"
+    };
+}
 
