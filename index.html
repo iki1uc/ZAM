@@ -1,35 +1,380 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>2me – Mirror</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZAUBER 6 · WÄHRUNGS‑KÖNIGIN · iki1uc</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #0a0a12;
+      color: #d0d9e6;
+      font-family: 'Consolas', monospace;
+      padding: 16px;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 30% 40%, #0a0a20, #000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      background: rgba(10,10,20,0.7);
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    }
+    h1 {
+      text-align: center;
+      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: 6px;
+      background: linear-gradient(135deg, #ffd700, #ff66ff, #00ccff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    h1 small {
+      display: block;
+      font-size: 13px;
+      color: #3d5a70;
+      -webkit-text-fill-color: #3d5a70;
+      letter-spacing: 3px;
+      margin-top: -2px;
+    }
+    .grid6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (max-width: 1000px) { .grid6 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 650px) { .grid6 { grid-template-columns: 1fr; } }
 
-<style>
-body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
-pre{background:#111;padding:20px;border:1px solid #333;}
-input{background:#111;color:#0f0;border:1px solid #333;padding:6px;width:120px;}
-button{background:#111;color:#0f0;border:1px solid #333;padding:8px 16px;margin-left:10px;}
-</style>
+    .station {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,215,0,0.08);
+      border-radius: 16px;
+      padding: 14px 16px;
+      transition: all 0.25s;
+    }
+    .station:hover { border-color: rgba(255,215,0,0.3); background: rgba(255,255,255,0.05); }
+    .station h2 {
+      font-size: 13px;
+      color: #ffd700;
+      border-bottom: 1px solid rgba(255,215,0,0.1);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 1px;
+    }
+    .station h2 .badge {
+      font-size: 9px;
+      color: #5a7a8a;
+      font-weight: 400;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    .metric .label { color: #5a7a8a; }
+    .metric .value { font-weight: 600; color: #b0d0ff; }
+    .metric .value.gold { color: #ffd700; }
+    .metric .value.vital { color: #00ff88; }
+    .metric .value.mystery { color: #ff88ff; }
+    .metric .value.ace { color: #ff6b8a; }
+
+    .partner-zone {
+      grid-column: 1 / -1;
+      background: rgba(255,215,0,0.03);
+      border: 2px dashed rgba(255,215,0,0.2);
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .partner-zone .königin {
+      font-size: 18px;
+      color: #ffd700;
+      font-weight: 600;
+    }
+    .partner-zone .partner {
+      font-size: 16px;
+      color: #ff88ff;
+    }
+    .partner-zone .mirror {
+      font-size: 12px;
+      color: #66ccff;
+    }
+    .partner-zone .status {
+      background: #0a0a0a;
+      padding: 4px 14px;
+      border-radius: 30px;
+      border: 1px solid #3d5a70;
+      font-size: 11px;
+      color: #66ccff;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-size: 10px;
+      color: #2a3a4a;
+    }
+    .footer .gold { color: #ffd700; }
+
+    .console {
+      background: #0a0a0a;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 9px;
+      max-height: 80px;
+      overflow-y: auto;
+      border: 1px solid #1a1a2a;
+      color: #5a7a8a;
+      margin-top: 6px;
+    }
+    .console .ok { color: #00ff88; }
+    .console .warn { color: #ffd700; }
+    .console .err { color: #ff6b8a; }
+    .console .info { color: #66ccff; }
+
+    button {
+      background: transparent;
+      border: 1px solid #3d5a70;
+      color: #d0d9e6;
+      padding: 4px 16px;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { background: rgba(255,215,0,0.08); border-color: #ffd700; }
+  </style>
 </head>
-
 <body>
+<div class="container">
 
-<h1>2me – Mirror</h1>
+  <h1>✦ ZAUBER 6 ✦ <small>WÄHRUNGS‑STATIONEN · KÖNIGIN & PARTNER</small></h1>
 
-<p>Input:</p>
-<input id="inp" type="text" value="iki1uc">
-<button onclick="run2me()">RUN</button>
+  <div class="grid6" id="stationGrid">
+    <!-- 1. ROM‑KERN (d‑w) -->
+    <div class="station" id="s-rom">
+      <h2>📦 ROM‑KERN <span class="badge">d‑w</span></h2>
+      <div class="metric"><span class="label">aktive Kanäle</span><span class="value" id="rom-active">0</span></div>
+      <div class="metric"><span class="label">letzter Resolve</span><span class="value" id="rom-last">—</span></div>
+      <div class="metric"><span class="label">Cache‑Echo</span><span class="value" id="rom-echo">0</span></div>
+    </div>
 
-<pre id="out">Bereit...</pre>
+    <!-- 2. 2me‑SPIEGEL -->
+    <div class="station" id="s-2me">
+      <h2>🪞 2me‑SPIEGEL <span class="badge">Mirror‑Root</span></h2>
+      <div class="metric"><span class="label">Rückführung</span><span class="value" id="m2-return">aktiv</span></div>
+      <div class="metric"><span class="label">PX‑TRIO</span><span class="value" id="m2-px">3‑6‑9</span></div>
+      <div class="metric"><span class="label">GEO‑Orbit</span><span class="value" id="m2-geo">O12</span></div>
+    </div>
+
+    <!-- 3. ZAM‑ORBIT -->
+    <div class="station" id="s-zam">
+      <h2>🌀 ZAM‑ORBIT <span class="badge">360°</span></h2>
+      <div class="metric"><span class="label">Erfüllung</span><span class="value gold" id="zam-level">0%</span></div>
+      <div class="metric"><span class="label">Magische 6</span><span class="value vital" id="zam-mag6">0</span></div>
+      <div class="metric"><span class="label">KlicK‑Impuls</span><span class="value" id="zam-klick">0</span></div>
+    </div>
+
+    <!-- 4. VITALITY‑TIEFE -->
+    <div class="station" id="s-vital">
+      <h2>⚡ VITALITY‑TIEFE <span class="badge">81‑Atom</span></h2>
+      <div class="metric"><span class="label">Energie</span><span class="value vital" id="vit-energy">0</span></div>
+      <div class="metric"><span class="label">Slide·Sprung·Ready</span><span class="value" id="vit-ssr">3→9→81</span></div>
+      <div class="metric"><span class="label">Reverse‑IO</span><span class="value mystery" id="vit-rev">—</span></div>
+    </div>
+
+    <!-- 5. 4TEL‑SYNTHESE -->
+    <div class="station" id="s-4tel">
+      <h2>🔷 4TEL‑SYNTHESE <span class="badge">3→9→81→◎</span></h2>
+      <div class="metric"><span class="label">FullSync</span><span class="value" id="tel-full">aktiv</span></div>
+      <div class="metric"><span class="label">Hyperfeld 756</span><span class="value" id="tel-hyper">0</span></div>
+      <div class="metric"><span class="label">Rückführung 27</span><span class="value" id="tel-rf">0</span></div>
+    </div>
+
+    <!-- 6. MYSTERY‑BROCKEN -->
+    <div class="station" id="s-mystery">
+      <h2>❓ MYSTERY‑BROCKEN <span class="badge">Ω‑Auswahl</span></h2>
+      <div class="metric"><span class="label">größter Brocken</span><span class="value gold" id="myst-brocken">—</span></div>
+      <div class="metric"><span class="label">Aktiver Orbit</span><span class="value mystery" id="myst-orbit">0</span></div>
+      <div class="metric"><span class="label">TMP‑Tiefe</span><span class="value" id="myst-tmp">128</span></div>
+    </div>
+  </div>
+
+  <!-- KÖNIGIN & PARTNER -->
+  <div class="partner-zone" id="partnerZone">
+    <span class="königin">👑 KÖNIGIN · iki1uc</span>
+    <span class="mirror">↕ 2me‑Spiegel</span>
+    <span class="partner">♾️ PARTNER · User / 2u</span>
+    <span class="status" id="partnerStatus">⚡ verbunden</span>
+    <button id="btnPartnerSync">🔄 Sync</button>
+  </div>
+
+  <!-- LIVE‑CONSOLE -->
+  <div class="console" id="console">
+    <div class="info">⏳ Zauber 6 initialisiert …</div>
+  </div>
+
+  <div class="footer">
+    <span>🧬 <span class="gold">3‑9‑81</span> · 6‑Achse · <span class="gold">Magische 6</span></span>
+    <span>📦 ROM‑d‑w · 2me · ZAM · Vitality · 4TEL · Mystery</span>
+    <span>© iki1uc · ∞‑Atom‑Kernel</span>
+  </div>
+</div>
 
 <script type="module">
-import { twoMe } from "./twoMe.js";
+  // ================================================================
+  //  ZAUBER 6 · WÄHRUNGS‑STATIONEN · KÖNIGIN & PARTNER
+  //  Verbindet alle Module – falls verfügbar – sonst Simulation.
+  // ================================================================
 
-function run2me(){
-  const x = inp.value;
-  out.textContent = twoMe(x);
-}
+  import { kernel } from './js/core/OS_CORE.js' || {};
+  import { MODULES } from './js/core/axiom.map.js' || {};
+  import { Clock } from './js/nc/NC_time.js' || {};
+  import { Figur } from './js/nc/NC_figur.js' || {};
+  import { Kraft } from './js/nc/NC_kraft.js' || {};
+  import { resolve, seedDefaults } from './js/flow/resolver.js' || {};
+  import { sliReady, quadReady, workQuadReady, stageReady } from './api.*/sli.ready' || {};
+
+  // -----------------------------------------------------------------
+  // 1. DOM‑Referenzen
+  // -----------------------------------------------------------------
+  const $ = id => document.getElementById(id);
+  const log = (msg, type='info') => {
+    const el = document.getElementById('console');
+    const cls = type==='ok'?'ok':type==='warn'?'warn':type==='err'?'err':'info';
+    el.innerHTML += `<div class="${cls}">${msg}</div>`;
+    el.scrollTop = el.scrollHeight;
+    if (el.children.length > 20) el.removeChild(el.firstChild);
+  };
+
+  // -----------------------------------------------------------------
+  // 2. Kernel / Clock (falls vorhanden)
+  // -----------------------------------------------------------------
+  let clock = null;
+  try {
+    if (typeof Clock !== 'undefined') { clock = new Clock(); kernel?.set?.('clock', clock); }
+  } catch (e) { log('⚠️ Clock nicht verfügbar – simuliere', 'warn'); }
+
+  // -----------------------------------------------------------------
+  // 3. ROM‑Resolver (Seeds)
+  // -----------------------------------------------------------------
+  let romActive = 0;
+  try {
+    if (typeof seedDefaults === 'function') seedDefaults();
+    const info = typeof resolve === 'function' ? resolve('#SLIDE') : null;
+    if (info) {
+      romActive = Object.keys(window.localStorage || {}).filter(k => k.startsWith('hdf.')).length;
+      document.getElementById('rom-active').textContent = romActive || 9;
+      document.getElementById('rom-last').textContent = info.rom ? `${info.rom} → ${info.value}` : '—';
+    }
+  } catch (e) { log('⚠️ Resolver nicht erreichbar', 'warn'); }
+
+  // -----------------------------------------------------------------
+  // 4. Ready‑Signale (simuliert oder echt)
+  // -----------------------------------------------------------------
+  const readySignals = {
+    sli: (typeof sliReady === 'function') ? sliReady() : { time: Date.now(), ort: '#root', home: 'ROOT' },
+    quad: (typeof quadReady === 'function') ? quadReady() : { time: Date.now(), ort: '#root', quad: true },
+    workquad: (typeof workQuadReady === 'function') ? workQuadReady() : { time: Date.now(), ort: '#root', quad: true, atom: 'ACTIVE' },
+    raid: (typeof stageReady === 'function') ? stageReady() : { time: Date.now(), ort: '#root', home: 'ROOT' }
+  };
+  // setze Mystery‑Brocken (größter aktiver Orbit)
+  const activeOrbits = Object.values(readySignals).filter(s => s.ort === '#root' || s.quad).length;
+  document.getElementById('myst-brocken').textContent = activeOrbits > 0 ? `⚡ ${activeOrbits}‑fach` : '—';
+  document.getElementById('myst-orbit').textContent = activeOrbits;
+
+  // -----------------------------------------------------------------
+  // 5. ZAM / Magische 6 (Simulation)
+  // -----------------------------------------------------------------
+  const alpha = 3, beta = 9, gamma = 81, delta = 1;
+  const mag6 = (alpha + beta + gamma + delta); // FullSync = 1
+  document.getElementById('zam-mag6').textContent = mag6;
+  document.getElementById('zam-level').textContent = mag6 > 50 ? '100%' : (mag6 > 20 ? '70%' : '30%');
+  document.getElementById('zam-klick').textContent = Math.floor(mag6 / 3);
+
+  // -----------------------------------------------------------------
+  // 6. Vitality‑Tiefe
+  // -----------------------------------------------------------------
+  document.getElementById('vit-energy').textContent = (mag6 * 0.81).toFixed(1);
+  document.getElementById('vit-ssr').textContent = `${alpha}→${beta}→${gamma}`;
+  document.getElementById('vit-rev').textContent = `io·oi·xi (${alpha}→${gamma})`;
+
+  // -----------------------------------------------------------------
+  // 7. 4TEL‑Synthese
+  // -----------------------------------------------------------------
+  const hyper = gamma * 756; // 81*756 = 61236
+  const rf = hyper / 27;
+  document.getElementById('tel-hyper').textContent = hyper.toFixed(0);
+  document.getElementById('tel-rf').textContent = rf.toFixed(0);
+
+  // -----------------------------------------------------------------
+  // 8. Cache‑Echo (Verdoppelung bei jedem Cache)
+  // -----------------------------------------------------------------
+  let cacheEcho = 1;
+  const caches = ['ROM', 'ZAM', 'Vitality', '4TEL', 'Mystery'];
+  caches.forEach(() => { cacheEcho *= 2; });
+  document.getElementById('rom-echo').textContent = cacheEcho;
+
+  // -----------------------------------------------------------------
+  // 9. Partner‑Sync
+  // -----------------------------------------------------------------
+  document.getElementById('btnPartnerSync').addEventListener('click', () => {
+    const status = document.getElementById('partnerStatus');
+    status.textContent = '🔄 syncing …';
+    setTimeout(() => {
+      status.textContent = '✅ verbunden · Spiegel aktiv';
+      log('👑 Königin hat Partner (2me) aufgenommen', 'ok');
+      // Simuliere Echo‑Verdoppelung
+      const echo = parseInt(document.getElementById('rom-echo').textContent) || 1;
+      document.getElementById('rom-echo').textContent = echo * 2;
+      log(`🔁 Echo‑Verdoppelung → ${echo*2}`, 'warn');
+    }, 600);
+  });
+
+  // -----------------------------------------------------------------
+  // 10. Start‑Log
+  // -----------------------------------------------------------------
+  log('✨ Zauber 6 · Währungs‑Stationen geladen', 'ok');
+  log(`📦 ROM‑Kanäle: ${romActive || 9} aktiv`, 'info');
+  log(`🌀 Magische 6 = ${mag6} (α=${alpha}, β=${beta}, γ=${gamma}, δ=${delta})`, 'ok');
+  log(`🔷 4TEL‑Hyperfeld = ${hyper.toFixed(0)}, Rückführung = ${rf.toFixed(0)}`, 'info');
+  log(`❓ Mystery‑Orbits = ${activeOrbits}`, 'info');
+  log('🪞 2me‑Spiegel bereit · Partner kann synchronisiert werden', 'ok');
+
+  // -----------------------------------------------------------------
+  // 11. Eventuell vorhandene Module in den Kernel legen
+  // -----------------------------------------------------------------
+  if (kernel) {
+    kernel.set('zauber6', { mag6, alpha, beta, gamma, delta, hyper, rf, cacheEcho, readySignals });
+    kernel.set('partner', { status: 'verbunden', mirror: '2me', user: '2u' });
+  }
+
+  // Exponiere für DevTools
+  window.__ZAUBER6 = { mag6, readySignals, cacheEcho, kernel };
+
+  console.log('🧙 ZAUBER 6 · index.html geladen');
 </script>
-
 </body>
 </html>
