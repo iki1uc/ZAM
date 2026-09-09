@@ -26,7 +26,7 @@ Sie spiegelt alle Systemachsen zurück auf den User:
 # SYSTEM-CYCLE
 
 SYS-x → 2me → PX3
-
+ 
 -----------------------------------------
 # MODULE
 
