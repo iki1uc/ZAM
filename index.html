@@ -124,6 +124,18 @@
       font-size: 11px;
       color: #66ccff;
     }
+    .partner-zone button {
+      background: transparent;
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 4px 16px;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .partner-zone button:hover { background: rgba(255,215,0,0.1); }
 
     .footer {
       margin-top: 24px;
@@ -152,19 +164,6 @@
     .console .warn { color: #ffd700; }
     .console .err { color: #ff6b8a; }
     .console .info { color: #66ccff; }
-
-    button {
-      background: transparent;
-      border: 1px solid #3d5a70;
-      color: #d0d9e6;
-      padding: 4px 16px;
-      border-radius: 30px;
-      font-family: inherit;
-      font-size: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover { background: rgba(255,215,0,0.08); border-color: #ffd700; }
   </style>
 </head>
 <body>
@@ -246,133 +245,188 @@
 <script type="module">
   // ================================================================
   //  ZAUBER 6 · WÄHRUNGS‑STATIONEN · KÖNIGIN & PARTNER
-  //  Verbindet alle Module – falls verfügbar – sonst Simulation.
+  //  Importiert NUR die tatsächlich vorhandenen Module.
+  //  Fallback: Simulation, falls ein Modul fehlt.
   // ================================================================
 
-  import { kernel } from './js/core/OS_CORE.js' || {};
-  import { MODULES } from './js/core/axiom.map.js' || {};
-  import { Clock } from './js/nc/NC_time.js' || {};
-  import { Figur } from './js/nc/NC_figur.js' || {};
-  import { Kraft } from './js/nc/NC_kraft.js' || {};
-  import { resolve, seedDefaults } from './js/flow/resolver.js' || {};
-  import { sliReady, quadReady, workQuadReady, stageReady } from './api.*/sli.ready' || {};
+  // ---- 1. Korrekte Imports (nur existierende Dateien) ----
+  let SLI, BRIDGE, VITAL, IO, OI, ZAM, KlicKZaM;
 
-  // -----------------------------------------------------------------
-  // 1. DOM‑Referenzen
-  // -----------------------------------------------------------------
+  try {
+    // ACHTUNG: Die Pfade müssen zu deiner tatsächlichen Ordnerstruktur passen.
+    // Ich gehe davon aus, dass diese Dateien im gleichen Ordner wie index.html liegen.
+    const mod = await import('./slide.sprung.ready');
+    SLI = mod;
+    console.log('✅ slide.sprung.ready geladen');
+  } catch (e) { console.warn('⚠️ slide.sprung.ready nicht gefunden', e); }
+
+  try {
+    const mod = await import('./bridge.multi.ready');
+    BRIDGE = mod;
+    console.log('✅ bridge.multi.ready geladen');
+  } catch (e) { console.warn('⚠️ bridge.multi.ready nicht gefunden', e); }
+
+  try {
+    const mod = await import('./vitality');
+    VITAL = mod;
+    console.log('✅ vitality geladen');
+  } catch (e) { console.warn('⚠️ vitality nicht gefunden', e); }
+
+  try {
+    const mod = await import('./io.reverse');
+    IO = mod;
+    console.log('✅ io.reverse geladen');
+  } catch (e) { console.warn('⚠️ io.reverse nicht gefunden', e); }
+
+  try {
+    const mod = await import('./oi.reverse');
+    OI = mod;
+    console.log('✅ oi.reverse geladen');
+  } catch (e) { console.warn('⚠️ oi.reverse nicht gefunden', e); }
+
+  try {
+    const mod = await import('./KlicK.ZaM');
+    ZAM = mod;
+    console.log('✅ KlicK.ZaM geladen');
+  } catch (e) { console.warn('⚠️ KlicK.ZaM nicht gefunden', e); }
+
+  try {
+    const mod = await import('./ZaM.KlicK');
+    KlicKZaM = mod;
+    console.log('✅ ZaM.KlicK geladen');
+  } catch (e) { console.warn('⚠️ ZaM.KlicK nicht gefunden', e); }
+
+  // ---- 2. DOM‑Referenzen ----
   const $ = id => document.getElementById(id);
   const log = (msg, type='info') => {
-    const el = document.getElementById('console');
+    const el = $('console');
     const cls = type==='ok'?'ok':type==='warn'?'warn':type==='err'?'err':'info';
     el.innerHTML += `<div class="${cls}">${msg}</div>`;
     el.scrollTop = el.scrollHeight;
     if (el.children.length > 20) el.removeChild(el.firstChild);
   };
 
-  // -----------------------------------------------------------------
-  // 2. Kernel / Clock (falls vorhanden)
-  // -----------------------------------------------------------------
-  let clock = null;
-  try {
-    if (typeof Clock !== 'undefined') { clock = new Clock(); kernel?.set?.('clock', clock); }
-  } catch (e) { log('⚠️ Clock nicht verfügbar – simuliere', 'warn'); }
+  // ---- 3. Hilfsfunktionen für die Stationen ----
+  function updateROM() {
+    // Lese localStorage nach ROM‑Keys
+    let keys = [];
+    try {
+      for (let i=0; i<localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('hdf.')) keys.push(k);
+      }
+    } catch (e) {}
+    const active = keys.length || 9; // Fallback
+    $('rom-active').textContent = active;
+    $('rom-last').textContent = keys.length ? keys[keys.length-1] : '—';
+    // Cache‑Echo wird bei jedem Sync verdoppelt
+    let echo = parseInt($('rom-echo').textContent) || 1;
+    echo = echo * 2;
+    if (echo > 1e12) echo = 1;
+    $('rom-echo').textContent = echo;
+  }
 
-  // -----------------------------------------------------------------
-  // 3. ROM‑Resolver (Seeds)
-  // -----------------------------------------------------------------
-  let romActive = 0;
-  try {
-    if (typeof seedDefaults === 'function') seedDefaults();
-    const info = typeof resolve === 'function' ? resolve('#SLIDE') : null;
-    if (info) {
-      romActive = Object.keys(window.localStorage || {}).filter(k => k.startsWith('hdf.')).length;
-      document.getElementById('rom-active').textContent = romActive || 9;
-      document.getElementById('rom-last').textContent = info.rom ? `${info.rom} → ${info.value}` : '—';
-    }
-  } catch (e) { log('⚠️ Resolver nicht erreichbar', 'warn'); }
+  function update2me() {
+    // PX‑TRIO: 3,6,9
+    $('m2-px').textContent = '3‑6‑9';
+    $('m2-geo').textContent = 'O12 / Φ4';
+    $('m2-return').textContent = 'aktiv';
+  }
 
-  // -----------------------------------------------------------------
-  // 4. Ready‑Signale (simuliert oder echt)
-  // -----------------------------------------------------------------
-  const readySignals = {
-    sli: (typeof sliReady === 'function') ? sliReady() : { time: Date.now(), ort: '#root', home: 'ROOT' },
-    quad: (typeof quadReady === 'function') ? quadReady() : { time: Date.now(), ort: '#root', quad: true },
-    workquad: (typeof workQuadReady === 'function') ? workQuadReady() : { time: Date.now(), ort: '#root', quad: true, atom: 'ACTIVE' },
-    raid: (typeof stageReady === 'function') ? stageReady() : { time: Date.now(), ort: '#root', home: 'ROOT' }
-  };
-  // setze Mystery‑Brocken (größter aktiver Orbit)
-  const activeOrbits = Object.values(readySignals).filter(s => s.ort === '#root' || s.quad).length;
-  document.getElementById('myst-brocken').textContent = activeOrbits > 0 ? `⚡ ${activeOrbits}‑fach` : '—';
-  document.getElementById('myst-orbit').textContent = activeOrbits;
+  function updateZAM() {
+    // Magische 6: α=3, β=9, γ=81, δ=1 → Summe = 94
+    const alpha = 3, beta = 9, gamma = 81, delta = 1;
+    const mag6 = alpha + beta + gamma + delta;
+    $('zam-mag6').textContent = mag6;
+    $('zam-level').textContent = mag6 > 50 ? '100%' : (mag6 > 20 ? '70%' : '30%');
+    $('zam-klick').textContent = Math.floor(mag6 / 3);
+  }
 
-  // -----------------------------------------------------------------
-  // 5. ZAM / Magische 6 (Simulation)
-  // -----------------------------------------------------------------
-  const alpha = 3, beta = 9, gamma = 81, delta = 1;
-  const mag6 = (alpha + beta + gamma + delta); // FullSync = 1
-  document.getElementById('zam-mag6').textContent = mag6;
-  document.getElementById('zam-level').textContent = mag6 > 50 ? '100%' : (mag6 > 20 ? '70%' : '30%');
-  document.getElementById('zam-klick').textContent = Math.floor(mag6 / 3);
+  function updateVitality() {
+    const alpha = 3, beta = 9, gamma = 81;
+    const energy = (alpha + beta + gamma) * 0.81;
+    $('vit-energy').textContent = energy.toFixed(1);
+    $('vit-ssr').textContent = `${alpha}→${beta}→${gamma}`;
+    $('vit-rev').textContent = `io·oi·xi (${alpha}→${gamma})`;
+  }
 
-  // -----------------------------------------------------------------
-  // 6. Vitality‑Tiefe
-  // -----------------------------------------------------------------
-  document.getElementById('vit-energy').textContent = (mag6 * 0.81).toFixed(1);
-  document.getElementById('vit-ssr').textContent = `${alpha}→${beta}→${gamma}`;
-  document.getElementById('vit-rev').textContent = `io·oi·xi (${alpha}→${gamma})`;
+  function update4TEL() {
+    const gamma = 81;
+    const hyper = gamma * 756; // 81*756
+    const rf = hyper / 27;
+    $('tel-hyper').textContent = hyper.toFixed(0);
+    $('tel-rf').textContent = rf.toFixed(0);
+    $('tel-full').textContent = 'aktiv';
+  }
 
-  // -----------------------------------------------------------------
-  // 7. 4TEL‑Synthese
-  // -----------------------------------------------------------------
-  const hyper = gamma * 756; // 81*756 = 61236
-  const rf = hyper / 27;
-  document.getElementById('tel-hyper').textContent = hyper.toFixed(0);
-  document.getElementById('tel-rf').textContent = rf.toFixed(0);
+  function updateMystery() {
+    // Aktive Orbits = Anzahl der geladenen Module
+    let active = 0;
+    if (SLI) active++;
+    if (BRIDGE) active++;
+    if (VITAL) active++;
+    if (IO) active++;
+    if (OI) active++;
+    if (ZAM) active++;
+    if (KlicKZaM) active++;
+    $('myst-orbit').textContent = active;
+    $('myst-brocken').textContent = active > 0 ? `⚡ ${active}‑fach` : '—';
+    $('myst-tmp').textContent = 128 - active * 6;
+  }
 
-  // -----------------------------------------------------------------
-  // 8. Cache‑Echo (Verdoppelung bei jedem Cache)
-  // -----------------------------------------------------------------
-  let cacheEcho = 1;
-  const caches = ['ROM', 'ZAM', 'Vitality', '4TEL', 'Mystery'];
-  caches.forEach(() => { cacheEcho *= 2; });
-  document.getElementById('rom-echo').textContent = cacheEcho;
+  // ---- 4. Gesamt‑Update ----
+  function updateAll() {
+    updateROM();
+    update2me();
+    updateZAM();
+    updateVitality();
+    update4TEL();
+    updateMystery();
+  }
 
-  // -----------------------------------------------------------------
-  // 9. Partner‑Sync
-  // -----------------------------------------------------------------
-  document.getElementById('btnPartnerSync').addEventListener('click', () => {
-    const status = document.getElementById('partnerStatus');
+  // ---- 5. Partner‑Sync (Königin nimmt Partner auf) ----
+  $('btnPartnerSync').addEventListener('click', () => {
+    const status = $('partnerStatus');
     status.textContent = '🔄 syncing …';
     setTimeout(() => {
+      // Simuliere Spiegel‑Rückführung
+      const echo = parseInt($('rom-echo').textContent) || 1;
+      $('rom-echo').textContent = echo * 2;
       status.textContent = '✅ verbunden · Spiegel aktiv';
       log('👑 Königin hat Partner (2me) aufgenommen', 'ok');
-      // Simuliere Echo‑Verdoppelung
-      const echo = parseInt(document.getElementById('rom-echo').textContent) || 1;
-      document.getElementById('rom-echo').textContent = echo * 2;
-      log(`🔁 Echo‑Verdoppelung → ${echo*2}`, 'warn');
+      // Zusätzlich: Magische 6 neu berechnen
+      updateZAM();
+      updateAll();
     }, 600);
   });
 
-  // -----------------------------------------------------------------
-  // 10. Start‑Log
-  // -----------------------------------------------------------------
+  // ---- 6. Automatisches Update alle 5 Sekunden ----
+  setInterval(() => {
+    updateAll();
+    // Cache‑Echo automatisch erhöhen (simuliert Verdoppelung)
+    const echo = parseInt($('rom-echo').textContent) || 1;
+    if (echo < 1e6) {
+      $('rom-echo').textContent = echo * 2;
+    } else {
+      $('rom-echo').textContent = 1;
+    }
+  }, 5000);
+
+  // ---- 7. Initialisierung ----
+  updateAll();
   log('✨ Zauber 6 · Währungs‑Stationen geladen', 'ok');
-  log(`📦 ROM‑Kanäle: ${romActive || 9} aktiv`, 'info');
-  log(`🌀 Magische 6 = ${mag6} (α=${alpha}, β=${beta}, γ=${gamma}, δ=${delta})`, 'ok');
-  log(`🔷 4TEL‑Hyperfeld = ${hyper.toFixed(0)}, Rückführung = ${rf.toFixed(0)}`, 'info');
-  log(`❓ Mystery‑Orbits = ${activeOrbits}`, 'info');
+  log(`📦 ROM‑Kanäle: ${$('rom-active').textContent} aktiv`, 'info');
+  log(`🌀 Magische 6 = ${$('zam-mag6').textContent}`, 'ok');
+  log(`🔷 4TEL‑Hyperfeld = ${$('tel-hyper').textContent}, Rückführung = ${$('tel-rf').textContent}`, 'info');
+  log(`❓ Mystery‑Orbits = ${$('myst-orbit').textContent}`, 'info');
   log('🪞 2me‑Spiegel bereit · Partner kann synchronisiert werden', 'ok');
 
-  // -----------------------------------------------------------------
-  // 11. Eventuell vorhandene Module in den Kernel legen
-  // -----------------------------------------------------------------
-  if (kernel) {
-    kernel.set('zauber6', { mag6, alpha, beta, gamma, delta, hyper, rf, cacheEcho, readySignals });
-    kernel.set('partner', { status: 'verbunden', mirror: '2me', user: '2u' });
-  }
-
-  // Exponiere für DevTools
-  window.__ZAUBER6 = { mag6, readySignals, cacheEcho, kernel };
+  // ---- 8. Exponiere für DevTools ----
+  window.__ZAUBER6 = {
+    SLI, BRIDGE, VITAL, IO, OI, ZAM, KlicKZaM,
+    updateAll,
+    log
+  };
 
   console.log('🧙 ZAUBER 6 · index.html geladen');
 </script>
