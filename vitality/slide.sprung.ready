@@ -1,1 +1,27 @@
+export function SLIDE_SPRUNG_READY(LAGE){
+
+    // 1. SLIDE – Basisimpuls (3)
+    const slide = {
+        ...LAGE,
+        slide: 3,
+        modi: "vitality.slide"
+    };
+
+    // 2. SPRUNG – Verstärkungsimpuls (9)
+    const sprung = {
+        ...slide,
+        sprung: 9,
+        modi: "vitality.sprung"
+    };
+
+    // 3. READY – Peakimpuls (81)
+    const ready = {
+        ...sprung,
+        ready: 81,
+        modi: "vitality.ready",
+        active: true
+    };
+
+    return ready;
+}
 
