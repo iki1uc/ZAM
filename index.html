@@ -1,626 +1,661 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🧿 AXIOM · ZAM · KLICK · BUBBLES · ECONOMIE</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: #080a12;
-      color: #d0d8e0;
-      font-family: 'Segoe UI', 'Consolas', monospace;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 12px;
-    }
-    .app {
-      max-width: 1400px; width:100%;
-      background: #0e141c;
-      border-radius: 28px;
-      padding: 16px 20px 20px;
-      border: 1px solid #2a3a4a;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-    }
-    .header {
-      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid #2a3a4a; padding-bottom: 10px; margin-bottom: 14px;
-    }
-    .header h1 {
-      font-size: 24px; font-weight: 300; letter-spacing: 3px;
-      background: linear-gradient(135deg, #6cf, #f0d080, #b388ff, #8cf0d0);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .header h1 small { font-size:12px; color:#5a7a8a; -webkit-text-fill-color:#5a7a8a; letter-spacing:1px; margin-left:6px; }
-    .top-leds { display:flex; gap:14px; font-size:11px; color:#5a7a8a; flex-wrap:wrap; align-items:center; }
-    .led { display:inline-block; width:10px; height:10px; border-radius:50%; background:#2a4a5a; transition:.3s; margin-right:4px; }
-    .led.green { background:#4f4; box-shadow:0 0 10px #4f4; }
-    .led.gold { background:#f0d080; box-shadow:0 0 10px #f0d080; }
-    .led.purple { background:#b388ff; box-shadow:0 0 10px #b388ff; }
-    .led.pulse { animation:pulse 1.4s infinite; }
-    @keyframes pulse { 0%,100%{opacity:.4;transform:scale(.8)} 50%{opacity:1;transform:scale(1.2)} }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏠 PENTHOUSE 6.0 · KLICK & ZACK</title>
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 18px;
-    }
-    @media (max-width: 900px) { .main-grid { grid-template-columns:1fr; } }
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: #0a0a0f;
+  color: #00ffff;
+  font-family: 'Consolas', 'Courier New', monospace;
+  overflow: hidden;
+  height: 100vh;
+  perspective: 1200px;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(10,10,18,0.92);
+  border-bottom: 2px solid #33ccff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+.header h1 { color: #33ccff; font-size: 14px; letter-spacing: 2px; }
+.header h1 span { color: #ffdd00; }
+.header .info { color: #6688aa; font-size: 9px; display: flex; gap: 10px; }
+.header .info .freq { color: #ff66ff; }
+.header .info .klick { color: #88ff44; }
 
-    .canvas-wrap {
-      background: #06080e;
-      border-radius: 16px;
-      border: 1px solid #1a2a3a;
-      padding: 6px;
-      position: relative;
-    }
-    .canvas-wrap canvas {
-      width:100%; height:auto; aspect-ratio: 16/9;
-      display: block; border-radius: 12px;
-      background: #05080c;
-      cursor: crosshair;
-    }
+#penthouse {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background: radial-gradient(ellipse at center, #0a0a1a, #000000);
+  overflow: hidden;
+}
+.panorama {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  max-height: 600px;
+  transform: rotateX(5deg) rotateY(0deg);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.floor {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) rotateX(90deg) translateZ(-160px);
+  width: 600px;
+  height: 600px;
+  background: repeating-conic-gradient(from 0deg at 50% 50%, #1a1a3a 0deg 10deg, #0a0a1a 10deg 20deg);
+  border-radius: 50%;
+  opacity: 0.25;
+  animation: floorSpin 40s linear infinite;
+  box-shadow: 0 0 80px rgba(51,204,255,0.08);
+}
+@keyframes floorSpin {
+  from { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(0deg); }
+  to { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(360deg); }
+}
+.freq-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.freq-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  animation: freqRise linear infinite;
+}
+@keyframes freqRise {
+  0% { transform: translateY(100%) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100%) scale(1); opacity: 0; }
+}
+.axis-6d {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  border: 1px solid rgba(51,204,255,0.04);
+  animation: axisSpin 60s linear infinite;
+}
+.axis-6d .ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(51,204,255,0.05);
+}
+.axis-6d .ring.r1 { width: 80%; height: 80%; }
+.axis-6d .ring.r2 { width: 60%; height: 60%; }
+.axis-6d .ring.r3 { width: 40%; height: 40%; }
+.axis-6d .ring.r4 { width: 20%; height: 20%; border-color: rgba(255,221,0,0.1); }
+@keyframes axisSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.scanner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 280px;
+  border: 2px solid rgba(51,204,255,0.1);
+  border-radius: 50%;
+  animation: scannerPulse 3s ease-in-out infinite;
+}
+.scanner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border: 1px solid rgba(255,221,0,0.06);
+  border-radius: 50%;
+  animation: scannerPulse 2s ease-in-out infinite 0.5s;
+}
+.scanner::after {
+  content: '●';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffdd00;
+  font-size: 9px;
+  animation: scannerBlink 1s ease-in-out infinite;
+}
+@keyframes scannerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.25; }
+  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.6; }
+}
+@keyframes scannerBlink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; text-shadow: 0 0 40px #ffdd00; }
+}
+.ort-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffdd00;
+  font-size: 36px;
+  text-shadow: 0 0 60px rgba(255,221,0,0.25);
+  animation: markerPulse 2s ease-in-out infinite;
+}
+@keyframes markerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+.tmp-rooms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+.tmp-room {
+  position: absolute;
+  padding: 3px 7px;
+  background: rgba(17,17,34,0.5);
+  border: 1px solid rgba(51,204,255,0.06);
+  border-radius: 4px;
+  font-size: 6px;
+  color: #6688aa;
+  backdrop-filter: blur(4px);
+  transition: all 0.4s;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+.tmp-room:hover { border-color: #33ccff; color: #00ffff; transform: scale(1.12); box-shadow: 0 0 20px rgba(51,204,255,0.08); }
+.tmp-room.active { border-color: #ffdd00; color: #ffdd00; background: rgba(255,221,0,0.06); }
+.tmp-room.help { border-color: #88ff44; color: #88ff44; }
+.tmp-room.error { border-color: #ff4444; color: #ff4444; }
 
-    .panel {
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .card {
-      background: #0a0a0f; border: 1px solid #1a2a3a; border-radius: 14px;
-      padding: 12px 14px;
-    }
-    .card h3 {
-      font-size: 11px; color: #f0d080; letter-spacing: 1.5px;
-      border-bottom: 1px solid #1a2a3a; padding-bottom: 4px; margin-bottom: 8px;
-      display: flex; justify-content: space-between;
-    }
-    .card h3 .badge { font-size:8px; background:#1a1a2a; padding:1px 10px; border-radius:12px; color:#5a7a8a; }
-    .metric { display:flex; justify-content:space-between; font-size:10px; padding:3px 0; border-bottom:1px solid #0e1620; }
-    .metric .label { color:#5a7a8a; }
-    .metric .value { font-weight:bold; }
-    .value.gold { color:#f0d080; }
-    .value.cyan { color:#6cf; }
-    .value.pink { color:#ff66ff; }
-    .value.green { color:#4f4; }
-    .value.purple { color:#b388ff; }
-    .value.orange { color:#ff8c00; }
+#status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(10,10,18,0.92);
+  border-top: 2px solid #2a2a3a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  font-size: 9px;
+  color: #6688aa;
+}
+#status .center { color: #33ccff; }
+#status .center span { color: #ff66ff; }
+#status .right span { color: #88ff44; }
+#status .klick-display { color: #88ff44; font-weight: bold; margin-right: 8px; }
+#status .zack-display { color: #ffdd00; font-weight: bold; }
 
-    .cmd-bar {
-      display: flex; flex-wrap: wrap; gap:6px; align-items:center;
-      background:#0e141c; border-radius:12px; padding:8px 12px;
-      border:1px solid #1a2a3a;
-    }
-    .cmd-bar input {
-      flex:1; background:#1a1a2a; border:1px solid #2a3a4a; color:#d0e0e8;
-      padding:5px 14px; border-radius:20px; font-size:11px; font-family:inherit; min-width:80px;
-    }
-    .cmd-bar input::placeholder { color:#4a5a6a; }
-    .cmd-bar button {
-      background:#1a1a2a; border:1px solid #2a3a4a; color:#9ab0c0;
-      padding:4px 14px; border-radius:20px; font-size:10px; font-family:inherit; cursor:pointer; transition:.2s;
-    }
-    .cmd-bar button:hover { background:#2a3a4a; border-color:#6cf; color:#d0e8f8; }
-    .cmd-bar button.sync { border-color:rgba(179,136,255,0.2); color:#b388ff; }
-    .cmd-bar button.sync:hover { background:rgba(179,136,255,0.1); }
+#controls {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  z-index: 1001;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 98%;
+}
+#controls button {
+  background: rgba(17,17,34,0.7);
+  color: #6688aa;
+  border: 1px solid #2a2a4a;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: 'Consolas', monospace;
+  font-size: 7px;
+  border-radius: 3px;
+  transition: all 0.3s;
+  backdrop-filter: blur(4px);
+}
+#controls button:hover { background: #1a1a3a; border-color: #66ccff; color: #00ffff; }
+#controls button.active { background: #1a2a4a; color: #00ff88; border-color: #00ff88; }
+#controls button.gold { color: #ffdd00; border-color: #554400; }
+#controls button.gold:hover { background: #2a1a00; border-color: #ffdd00; }
+#controls button.red { color: #ff4444; border-color: #442222; }
+#controls button.red:hover { background: #2a0a0a; border-color: #ff4444; }
+#controls button.green { color: #88ff44; border-color: #224422; }
+#controls button.green:hover { background: #0a2a0a; border-color: #88ff44; }
+#controls button.mxu { color: #ff66ff; border-color: #442244; }
+#controls button.mxu:hover { background: #2a0a2a; border-color: #ff66ff; }
+#controls button.klick-btn { color: #88ff44; border-color: #88ff44; font-size: 9px; padding: 4px 16px; }
 
-    .bubble-row {
-      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
-    }
-    .bubble-tag {
-      background: #111; border: 1px solid #2a3a4a; border-radius: 20px;
-      padding: 2px 12px; font-size: 9px; color: #8ab0c0;
-      display: inline-flex; align-items: center; gap: 4px; transition: .2s;
-      cursor: pointer;
-    }
-    .bubble-tag .dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
-    .bubble-tag .dot.gold { background:#f0d080; }
-    .bubble-tag .dot.cyan { background:#6cf; }
-    .bubble-tag .dot.pink { background:#ff66ff; }
-    .bubble-tag .dot.purple { background:#b388ff; }
-    .bubble-tag .dot.green { background:#4f4; }
-    .bubble-tag .val { color:#f0d080; font-weight:bold; }
-    .bubble-tag:hover { border-color:#6cf; background:#1a2a3a; }
-
-    .log-box {
-      background:#111; padding:6px 12px; border-radius:10px;
-      border:1px solid #2a3a4a; font-size:9px; line-height:1.6;
-      max-height:110px; overflow-y:auto; color:#5a7a8a; margin-top:6px;
-    }
-    .log-box .entry { border-bottom:1px solid #0e1620; padding:2px 0; }
-    .log-box .time { color:#2a3a4a; }
-    .log-box .floor { color:#6cf; }
-    .log-box .msg { color:#8ab0c0; }
-
-    .footer {
-      display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
-      margin-top:14px; padding:4px 16px; background:#0e141c; border-radius:12px;
-      border:1px solid #1a2a3a; font-size:9px; color:#3a4a5a;
-    }
-    .footer .gold { color:#f0d080; }
-    ::-webkit-scrollbar { width:4px; }
-    ::-webkit-scrollbar-track { background:#080c12; }
-    ::-webkit-scrollbar-thumb { background:#1a2a3a; border-radius:4px; }
-  </style>
+@media (max-width: 700px) {
+  .header h1 { font-size: 10px; }
+  .header .info { font-size: 7px; gap: 4px; }
+  .floor { width: 300px; height: 300px; }
+  .axis-6d { width: 220px; height: 220px; }
+  .scanner { width: 140px; height: 140px; }
+  .scanner::before { width: 70px; height: 70px; }
+  .ort-marker { font-size: 24px; }
+  .tmp-room { font-size: 5px; padding: 2px 4px; }
+  #controls button { font-size: 6px; padding: 2px 6px; }
+}
+</style>
 </head>
 <body>
 
-<div class="app">
-  <div class="header">
-    <h1>🧿 AXIOM · ZAM <small>KlicK · Bubbles · Economie</small></h1>
-    <div class="top-leds">
-      <span><span class="led green pulse"></span> LIVE</span>
-      <span><span class="led gold"></span> MARKT</span>
-      <span><span class="led purple"></span> Φ4</span>
-      <span id="clockDisplay">⏱️ --:--</span>
-    </div>
-  </div>
-
-  <div class="main-grid">
-    <!-- linke Seite: Canvas + Steuerung -->
-    <div>
-      <div class="canvas-wrap">
-        <canvas id="bubbleCanvas" width="1200" height="700"></canvas>
-      </div>
-
-      <div class="cmd-bar" style="margin-top:10px;">
-        <input id="cmdInput" placeholder="SHOCK / GROW / TRADE / RESET / MYSTERY" value="TRADE">
-        <button class="sync" onclick="sendCmd()">⚡ SEND</button>
-        <button onclick="toggleAuto()">▶ AUTO</button>
-        <button onclick="stepTick()">⏭ STEP</button>
-        <button onclick="resetSim()">⟲ RESET</button>
-        <span style="color:#5a7a8a;font-size:9px;">Speed</span>
-        <input type="range" id="speedSlider" min="1" max="10" value="4" style="width:60px;background:#1e242c;">
-      </div>
-    </div>
-
-    <!-- rechte Seite: Panel + Bubbles -->
-    <div class="panel">
-      <div class="card">
-        <h3>📊 MARKT · BOERSE <span class="badge" id="badgeTrades">0</span></h3>
-        <div class="metric"><span class="label">Aktienkurs</span><span class="value gold" id="mPrice">0.00</span></div>
-        <div class="metric"><span class="label">Handelsvolumen</span><span class="value cyan" id="mVolume">0</span></div>
-        <div class="metric"><span class="label">Blasen‑Index</span><span class="value pink" id="mBubbleIdx">0.00</span></div>
-        <div class="metric"><span class="label">Wirtschaftswachstum</span><span class="value green" id="mGrowth">0.0%</span></div>
-        <div class="metric"><span class="label">Φ4‑Korrelation</span><span class="value purple" id="mPhi">0.00</span></div>
-      </div>
-
-      <div class="card">
-        <h3>🌀 BUBBLES · 3‑9‑81 <span class="badge" id="bubbleCount">0</span></h3>
-        <div class="bubble-row" id="bubbleList"></div>
-        <div style="margin-top:6px;font-size:9px;color:#3a4a5a;">
-          <span class="bubble-tag"><span class="dot gold"></span> Wert</span>
-          <span class="bubble-tag"><span class="dot cyan"></span> Volumen</span>
-          <span class="bubble-tag"><span class="dot pink"></span> Dynamik</span>
-          <span class="bubble-tag"><span class="dot purple"></span> Φ4</span>
-        </div>
-      </div>
-
-      <div class="card" style="flex:1;">
-        <h3>📖 DEUTUNG · LOG</h3>
-        <div class="log-box" id="logBox">
-          <div class="entry"><span class="time">[INIT]</span> <span class="floor">🧿 AXIOM</span> <span class="msg">ZAM · KlicK · Bubbles · Economie gestartet</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>🧿 AXIOM · ZAM · <span class="gold">KlicK</span> · Bubbles · Economie</span>
-    <span>⌨️  Leertaste=Auto · Enter=Befehl · m=Mystery</span>
-    <span id="footerTick">Tick: 0</span>
+<div class="header">
+  <h1>🏠 PENTHOUSE · <span>6.0</span> · KLICK & ZACK</h1>
+  <div class="info">
+    <span class="freq" id="freqDisplay">12e</span>
+    <span>6D · <span id="d5">HSF</span></span>
+    <span>RESPO · <span id="respoStatus">synthesis</span></span>
+    <span>MXU · <span id="mxuDisplay">SYNC</span></span>
+    <span class="klick">KlicK: <span id="klickCount">0</span></span>
+    <span>ZacK: <span id="zackCount">0</span></span>
   </div>
 </div>
 
-<script>
-  "use strict";
+<div id="penthouse">
+  <div class="panorama" id="panorama">
+    <div class="floor"></div>
+    <div class="freq-stream" id="freqStream"></div>
+    <div class="axis-6d"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div></div>
+    <div class="scanner" id="scannerEl"></div>
+    <div class="ort-marker">◉</div>
+    <div class="tmp-rooms" id="tmpRooms"></div>
+  </div>
+</div>
 
-  // ================================================================
-  //  AXIOM · ZAM · KLICK · BUBBLES · ECONOMIE
-  //  Eine interaktive Wirtschafts‑ & Simulations‑Engine mit
-  //  Blasen‑Dynamik, Börsen‑Sortierung und SimCity‑artigem Feedback.
-  //  Basis: v3‑Engine (Leader‑Election, rAF, stabiler Log, feste Basis)
-  // ================================================================
+<div id="controls">
+  <button class="klick-btn green" id="btnKlick">🔘 KLICK</button>
+  <button class="gold" id="btnReset">⟲ RESET</button>
+  <button id="btnRotate" class="active">⟳ ROTATE</button>
+  <button id="btnFreq">📡 FREQ</button>
+  <button id="btnScan">🔍 SCAN</button>
+  <button class="green" id="btnHelp">🆘 HELP</button>
+  <button class="red" id="btnError">⚠️ ERROR</button>
+  <button id="btnSense">👁️ SENSE</button>
+  <button id="btnWraight">✅ WRAIGHT</button>
+  <button class="gold" id="btnCoach">🧑‍🏫 COACH</button>
+  <button id="btnTmp">🌀 TMP</button>
+  <button id="btnFull">🔮 FULL</button>
+  <button class="mxu" id="btnMxu">⚡ MXU</button>
+  <button class="gold" id="btnPenth">🏠 PENTHOUSE</button>
+  <span style="color:#6688aa;font-size:7px;display:flex;align-items:center;gap:4px;">
+    Auto: <input type="range" id="autoSpeed" min="0" max="10" value="1" style="width:40px;background:#1a1a2a;">
+  </span>
+</div>
 
-  // ─── CANVAS ──────────────────────────────────────────────────────
-  const canvas = document.getElementById('bubbleCanvas');
-  const ctx = canvas.getContext('2d');
+<div id="status">
+  <span>🧠 <span id="agentStatus">bereit</span></span>
+  <span class="center">◉ <span id="centerInfo">RESPO.synthesis · GEO.TRANS</span></span>
+  <span class="right">
+    <span class="klick-display">KlicK: <span id="statusKlick">0</span></span>
+    <span class="zack-display">ZacK: <span id="statusZack">0</span></span>
+    <span>SCORE: <span id="scoreVal">0</span></span>
+  </span>
+</div>
 
-  function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const w = Math.min(rect.width * 0.95, 1200);
-    canvas.width = w * 1.1;
-    canvas.height = (w * 0.6) * 1.1;
+<script type="importmap">
+{
+  "imports": {
+    "./economy.js": "./economy.js",
+    "./ui.js": "./ui.js"
   }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  // ─── STATE ──────────────────────────────────────────────────────
-  const state = {
-    tick: 0,
-    paused: false,
-    auto: false,
-    speed: 4,
-    // Wirtschaftsdaten
-    market: {
-      price: 1.0,
-      volume: 100,
-      growth: 0.02,
-      bubbleIdx: 0.5,
-      phi: 0.3,
-      trades: 0,
-    },
-    // Blasen (3‑9‑81‑System)
-    bubbles: [
-      { id: 'welt', label: 'Welt', value: 0.6, volume: 40, dynamik: 0.05, phi: 0.2, color: '#f0d080' },
-      { id: 'kraft', label: 'Kraft', value: 0.8, volume: 60, dynamik: -0.02, phi: 0.4, color: '#6cf' },
-      { id: 'leben', label: 'Leben', value: 0.4, volume: 30, dynamik: 0.08, phi: 0.1, color: '#ff66ff' },
-      { id: 'mystery', label: 'Mystery', value: 0.7, volume: 50, dynamik: -0.04, phi: 0.6, color: '#b388ff' },
-      { id: 'respo', label: 'Respo', value: 0.5, volume: 45, dynamik: 0.01, phi: 0.25, color: '#4f4' },
-      { id: 'axiom', label: 'Axiom', value: 0.9, volume: 80, dynamik: 0.06, phi: 0.8, color: '#ff8c00' },
-    ],
-    commands: [],
-    log: [],
-    maxLog: 40,
-    // rAF
-    lastTime: 0,
-    accumulator: 0,
-    stepTime: 200, // ms pro Schritt (wird dynamisch)
-  };
-
-  // ─── HELPER ─────────────────────────────────────────────────────
-  function log(msg, floor = '🧿 AXIOM') {
-    const time = new Date().toLocaleTimeString('de-DE');
-    state.log.push({ time, msg, floor });
-    if (state.log.length > state.maxLog) state.log.shift();
-    renderLog();
-  }
-
-  function renderLog() {
-    const box = document.getElementById('logBox');
-    box.innerHTML = state.log.map(e =>
-      `<div class="entry"><span class="time">[${e.time}]</span> <span class="floor">${e.floor}</span> <span class="msg">${e.msg}</span></div>`
-    ).join('');
-    box.scrollTop = box.scrollHeight;
-  }
-
-  function updateUI() {
-    const m = state.market;
-    document.getElementById('mPrice').textContent = m.price.toFixed(2);
-    document.getElementById('mVolume').textContent = m.volume.toFixed(0);
-    document.getElementById('mBubbleIdx').textContent = m.bubbleIdx.toFixed(2);
-    document.getElementById('mGrowth').textContent = (m.growth * 100).toFixed(1) + '%';
-    document.getElementById('mPhi').textContent = m.phi.toFixed(2);
-    document.getElementById('badgeTrades').textContent = m.trades;
-    document.getElementById('bubbleCount').textContent = state.bubbles.length;
-    document.getElementById('footerTick').textContent = 'Tick: ' + state.tick;
-  }
-
-  // ─── BUBBLE‑RENDER (Liste) ─────────────────────────────────────
-  function renderBubbleList() {
-    const container = document.getElementById('bubbleList');
-    container.innerHTML = '';
-    state.bubbles.forEach(b => {
-      const tag = document.createElement('span');
-      tag.className = 'bubble-tag';
-      const dotColor = b.color || '#888';
-      tag.innerHTML = `
-        <span class="dot" style="background:${dotColor};"></span>
-        ${b.label}
-        <span class="val">${(b.value * 100).toFixed(0)}%</span>
-      `;
-      tag.title = `Vol: ${b.volume} | Dyn: ${(b.dynamik*100).toFixed(1)}% | Φ: ${b.phi.toFixed(2)}`;
-      container.appendChild(tag);
-    });
-  }
-
-  // ─── PHYSIK / WIRTSCHAFTSSCHRITT ──────────────────────────────
-  function stepEconomy(force = false) {
-    if (state.paused && !force) return;
-    state.tick++;
-
-    // Befehle abarbeiten
-    if (state.commands.length > 0) {
-      const cmd = state.commands.shift();
-      processCommand(cmd);
-    }
-
-    const m = state.market;
-
-    // Blasen‐Dynamik (Markt beeinflusst Blasen)
-    state.bubbles.forEach(b => {
-      // Wert ändert sich durch Dynamik + Rauschen + Markteinfluss
-      b.value += b.dynamik * 0.02 + (Math.random() - 0.5) * 0.01 + (m.growth * 0.005);
-      b.value = Math.max(0.05, Math.min(0.95, b.value));
-      // Volumen schwankt
-      b.volume += (Math.random() - 0.5) * 2 + m.growth * 0.5;
-      b.volume = Math.max(5, b.volume);
-      // Phi = Korrelation mit Markt
-      b.phi = 0.3 + 0.5 * (b.value * 0.7 + m.price * 0.3);
-      b.phi = Math.min(0.95, b.phi);
-      // Dynamik ändert sich leicht
-      b.dynamik += (Math.random() - 0.5) * 0.01;
-      b.dynamik = Math.max(-0.08, Math.min(0.08, b.dynamik));
-    });
-
-    // Markt (boerse) – beeinflusst durch Blasen
-    const avgValue = state.bubbles.reduce((s, b) => s + b.value, 0) / state.bubbles.length;
-    const avgVol = state.bubbles.reduce((s, b) => s + b.volume, 0) / state.bubbles.length;
-    const avgPhi = state.bubbles.reduce((s, b) => s + b.phi, 0) / state.bubbles.length;
-
-    m.price += (avgValue - 0.5) * 0.01 + (Math.random() - 0.5) * 0.005;
-    m.price = Math.max(0.1, m.price);
-    m.volume += (avgVol - 50) * 0.02 + (Math.random() - 0.5) * 1;
-    m.volume = Math.max(10, m.volume);
-    m.growth += (avgValue - 0.5) * 0.001;
-    m.growth = Math.max(-0.05, Math.min(0.1, m.growth));
-    m.bubbleIdx = avgValue * 0.7 + avgPhi * 0.3;
-    m.phi = avgPhi;
-    m.trades += Math.floor(Math.random() * 3);
-
-    // UI aktualisieren
-    updateUI();
-    renderBubbleList();
-    drawCanvas();
-
-    // Log bei besonderen Ereignissen
-    if (state.tick % 10 === 0) {
-      log(`📊 Tick ${state.tick} · Kurs ${m.price.toFixed(2)} · Vol ${m.volume.toFixed(0)} · Φ ${m.phi.toFixed(2)}`, '📈 BOERSE');
-    }
-  }
-
-  // ─── BEFEHLE ────────────────────────────────────────────────────
-  function processCommand(cmd) {
-    const u = cmd.toUpperCase().trim();
-    log(`⚡ Befehl: ${u}`, '🎮 KLICK');
-    const m = state.market;
-
-    if (u.includes('SHOCK')) {
-      state.bubbles.forEach(b => { b.value = Math.min(0.95, b.value + 0.1); b.dynamik += 0.02; });
-      m.price += 0.2;
-      log('💥 SHOCK → Blasenwert +10%, Kurs +0.2');
-    } else if (u.includes('GROW')) {
-      m.growth = Math.min(0.1, m.growth + 0.01);
-      state.bubbles.forEach(b => { b.volume += 5; });
-      log('🌱 GROW → Wachstum +1%, Volumen +5');
-    } else if (u.includes('TRADE')) {
-      const gain = (Math.random() - 0.3) * 0.5;
-      m.price += gain;
-      m.volume += Math.floor(Math.random() * 10) + 1;
-      m.trades += 1;
-      log(`💹 TRADE → Kurs ${gain > 0 ? '+' : ''}${gain.toFixed(2)}, Vol +${Math.floor(Math.random()*10)+1}`);
-    } else if (u.includes('RESET')) {
-      resetSim();
-      log('⟲ RESET (via Befehl)');
-    } else if (u.includes('MYSTERY')) {
-      state.bubbles.forEach(b => { b.dynamik = (Math.random() - 0.5) * 0.1; b.value = 0.3 + Math.random() * 0.5; });
-      m.phi = 0.1 + Math.random() * 0.7;
-      log('🌀 MYSTERY → Chaos‐Modus aktiviert');
-    } else {
-      log(`⚠️ Unbekannt: ${u}`);
-    }
-  }
-
-  // ─── CANVAS ZEICHNEN ───────────────────────────────────────────
-  function drawCanvas() {
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    // Hintergrund
-    ctx.fillStyle = '#05080c';
-    ctx.fillRect(0, 0, w, h);
-
-    // Sterne
-    for (let i = 0; i < 60; i++) {
-      if (i % 2 === 0) continue;
-      ctx.fillStyle = `rgba(255,255,255,${0.03 + Math.random()*0.07})`;
-      ctx.beginPath();
-      ctx.arc(Math.random() * w, Math.random() * h, 0.4 + Math.random() * 0.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    const cx = w * 0.5, cy = h * 0.5;
-    const m = state.market;
-
-    // Zentrum
-    const radius = 18 + m.price * 15;
-    ctx.shadowColor = '#f0d080';
-    ctx.shadowBlur = 40;
-    ctx.fillStyle = '#f0d080';
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#05080c';
-    ctx.font = '10px Consolas';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Φ', cx, cy);
-
-    // Blasen als Orbit‐Punkte
-    const count = state.bubbles.length;
-    state.bubbles.forEach((b, idx) => {
-      const angle = (idx / count) * Math.PI * 2 + state.tick * 0.005;
-      const dist = 80 + b.value * 120 + m.price * 20;
-      const x = cx + dist * Math.cos(angle);
-      const y = cy + dist * Math.sin(angle);
-      const size = 8 + b.volume * 0.15;
-
-      // Glühen
-      ctx.shadowColor = b.color || '#888';
-      ctx.shadowBlur = 25;
-      ctx.fillStyle = b.color || '#888';
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      // Label
-      ctx.fillStyle = '#d0d8e0';
-      ctx.font = '8px Consolas';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText(b.label, x, y - size - 4);
-      ctx.fillStyle = '#f0d080';
-      ctx.font = '7px Consolas';
-      ctx.textBaseline = 'top';
-      ctx.fillText((b.value * 100).toFixed(0) + '%', x, y + size + 2);
-
-      // Verbindungslinie zum Zentrum
-      ctx.globalAlpha = 0.08;
-      ctx.strokeStyle = b.color || '#888';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-    });
-
-    // Verbindungen zwischen Blasen (Netzwerk)
-    ctx.globalAlpha = 0.06;
-    ctx.strokeStyle = '#6cf';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < state.bubbles.length; i++) {
-      for (let j = i+1; j < state.bubbles.length; j++) {
-        const a = state.bubbles[i], b = state.bubbles[j];
-        const angA = (i / count) * Math.PI * 2 + state.tick * 0.005;
-        const angB = (j / count) * Math.PI * 2 + state.tick * 0.005;
-        const distA = 80 + a.value * 120 + m.price * 20;
-        const distB = 80 + b.value * 120 + m.price * 20;
-        ctx.beginPath();
-        ctx.moveTo(cx + distA * Math.cos(angA), cy + distA * Math.sin(angA));
-        ctx.lineTo(cx + distB * Math.cos(angB), cy + distB * Math.sin(angB));
-        ctx.stroke();
-      }
-    }
-    ctx.globalAlpha = 1;
-
-    // Info
-    ctx.fillStyle = '#3a4a5a';
-    ctx.font = '10px Consolas';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(`Tick ${state.tick}  |  Kurs ${m.price.toFixed(2)}  |  Vol ${m.volume.toFixed(0)}  |  Φ ${m.phi.toFixed(2)}`, 20, h - 20);
-    ctx.textAlign = 'right';
-    ctx.fillText(`Bubbles: ${state.bubbles.length}  |  Trades: ${m.trades}`, w - 20, h - 20);
-  }
-
-  // ─── LOOP (requestAnimationFrame) ──────────────────────────────
-  function loop(now) {
-    if (!state.lastTime) state.lastTime = now;
-    const delta = now - state.lastTime;
-    state.lastTime = now;
-
-    // stepTime dynamisch: 800 - speed * 60 (wie in der v3-Engine)
-    state.stepTime = Math.max(80, 800 - state.speed * 60);
-    state.accumulator += delta;
-
-    while (state.accumulator >= state.stepTime) {
-      if (!state.paused) stepEconomy();
-      state.accumulator -= state.stepTime;
-    }
-
-    // Canvas immer zeichnen (auch im Pause-Modus)
-    drawCanvas();
-
-    requestAnimationFrame(loop);
-  }
-
-  // ─── STEUERUNG ──────────────────────────────────────────────────
-  function sendCmd() {
-    const input = document.getElementById('cmdInput');
-    const cmd = input.value.trim();
-    if (cmd) {
-      state.commands.push(cmd);
-      log(`📨 Befehl in Queue: ${cmd}`, '🎮 KLICK');
-      input.value = '';
-    }
-  }
-
-  function toggleAuto() {
-    state.auto = !state.auto;
-    state.paused = !state.auto;
-    log(state.auto ? '▶ AUTO aktiv' : '⏸ AUTO deaktiviert', '🎮 KLICK');
-    if (state.auto) {
-      state.paused = false;
-    }
-  }
-
-  function stepTick() {
-    state.paused = true;
-    state.auto = false;
-    log('⏭ Manueller Schritt', '🎮 KLICK');
-    stepEconomy(true);
-  }
-
-  function resetSim() {
-    state.tick = 0;
-    state.market.price = 1.0;
-    state.market.volume = 100;
-    state.market.growth = 0.02;
-    state.market.bubbleIdx = 0.5;
-    state.market.phi = 0.3;
-    state.market.trades = 0;
-    state.bubbles.forEach(b => {
-      b.value = 0.5 + (Math.random() - 0.5) * 0.3;
-      b.volume = 30 + Math.random() * 40;
-      b.dynamik = (Math.random() - 0.5) * 0.04;
-      b.phi = 0.2 + Math.random() * 0.4;
-    });
-    state.commands = [];
-    state.paused = false;
-    state.auto = false;
-    updateUI();
-    renderBubbleList();
-    log('⟲ SIMULATION zurückgesetzt', '🧿 AXIOM');
-  }
-
-  // ─── EVENTS ─────────────────────────────────────────────────────
-  document.getElementById('cmdInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendCmd();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === ' ' && e.target === document.body) {
-      e.preventDefault();
-      toggleAuto();
-    }
-    if ((e.key === 'm' || e.key === 'M') && e.target !== document.getElementById('cmdInput')) {
-      state.commands.push('MYSTERY');
-      log('🌀 Mystery‑Befehl in Queue', '🎮 KLICK');
-    }
-    if (e.key === 'r' || e.key === 'R') {
-      if (e.target !== document.getElementById('cmdInput')) resetSim();
-    }
-  });
-
-  document.getElementById('speedSlider').addEventListener('input', function() {
-    state.speed = parseInt(this.value) || 4;
-    log(`⚡ Speed auf ${state.speed} gesetzt`, '🎮 KLICK');
-  });
-
-  // ─── UHR ────────────────────────────────────────────────────────
-  function updateClock() {
-    document.getElementById('clockDisplay').textContent = '⏱️ ' + new Date().toLocaleTimeString('de-DE');
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
-
-  // ─── INIT ───────────────────────────────────────────────────────
-  function init() {
-    log('🧿 AXIOM · ZAM · KlicK · Bubbles · Economie gestartet', '🧿 AXIOM');
-    log('💡 Befehle: SHOCK, GROW, TRADE, RESET, MYSTERY', '🧿 AXIOM');
-    log('⌨️  Leertaste=Auto, Enter=Befehl, m=Mystery, r=Reset', '🧿 AXIOM');
-    updateUI();
-    renderBubbleList();
-    drawCanvas();
-    requestAnimationFrame(loop);
-  }
-
-  init();
-  console.log('🧿 AXIOM · ZAM · KlicK · Bubbles · Economie geladen');
-  console.log('⌨️  Leertaste=Auto, Enter=Befehl, m=Mystery, r=Reset');
+}
 </script>
 
+<script type="module">
+// ============================================================
+// PENTHOUSE 6.0 · KLICK & ZACK – Hauptmodul
+// Importiert die Ökonomie‑ und UI‑Module
+// ============================================================
+import { Economy } from './economy.js';
+import { initUI } from './ui.js';
+
+// ── Globale Instanz ──
+window.economy = new Economy();
+
+// ── UI initialisieren (bindet Events, Updates) ──
+initUI(window.economy);
+
+console.log('🏠 PENTHOUSE 6.0 · KLICK & ZACK · geladen');
+console.log('⌨️  Leertaste = KlicK, r=Reset, h=Help, e=Error, w=Wraight, c=Coach, t=Tmp, f=Full, m=Mxu, p=Penthouse');
+console.log('🔘 KlicK-Button oder Leertaste drücken, um KlicK zu generieren.');
+</script>
+
+<script type="module">
+// ============================================================
+// PENTHOUSE 6.0 · KLICK & ZACK – Legacy Penthouse‑Funktionen
+// (unverändert, aber jetzt mit KlicK‑Integration)
+// ============================================================
+
+// ── STATE (nur für Penthouse‑spezifische Dinge) ──
+let state = {
+  rotate: true, freq: 12, scan: false, score: 0, angle: 0,
+  agent: 'bereit', wraight: '⏳', coach: 'bereit', mxu: 'SYNC'
+};
+
+// ── DOM REFS ──
+const panorama = document.getElementById('panorama');
+const freqStream = document.getElementById('freqStream');
+const tmpRooms = document.getElementById('tmpRooms');
+const scannerEl = document.getElementById('scannerEl');
+
+// ── TMP RÄUME ──
+const TMP_ROOMS = [
+  { id: "help.tmp", x: 8, y: 18, label: "🆘" },
+  { id: "error.tmp", x: 82, y: 22, label: "⚠️" },
+  { id: "sense.tmp", x: 42, y: 12, label: "👁️" },
+  { id: "wraight.tmp", x: 68, y: 72, label: "✅" },
+  { id: "coach.tmp", x: 22, y: 78, label: "🧑‍🏫" },
+  { id: "tmp.tmp", x: 52, y: 52, label: "🌀" },
+  { id: "push.tmp", x: 12, y: 48, label: "▶" },
+  { id: "flow.tmp", x: 78, y: 48, label: "~" },
+  { id: "spin.tmp", x: 48, y: 32, label: "⟳" },
+  { id: "root.tmp", x: 32, y: 62, label: "◈" }
+];
+
+function buildTmpRooms() {
+  tmpRooms.innerHTML = '';
+  TMP_ROOMS.forEach(room => {
+    const el = document.createElement('div');
+    el.className = 'tmp-room';
+    el.dataset.id = room.id;
+    el.style.left = room.x + '%';
+    el.style.top = room.y + '%';
+    el.textContent = room.label + ' ' + room.id;
+    el.onclick = () => {
+      // KlicK beim Anklicken eines Raums (optional)
+      window.economy?.addKlick(1);
+      state.score += 1;
+      document.getElementById('scoreVal').textContent = Math.floor(state.score);
+      el.classList.toggle('active');
+      const label = room.id.replace('.tmp','').toUpperCase();
+      document.getElementById('centerInfo').textContent = `📍 ${label} · aktiv`;
+    };
+    tmpRooms.appendChild(el);
+  });
+}
+
+// ── FREQ PARTICLES ──
+function buildFreqParticles() {
+  freqStream.innerHTML = '';
+  const count = 18 + Math.floor(Math.random() * 12);
+  const colors = ['#33ccff', '#ffdd00', '#ff66ff', '#88ff44'];
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'freq-particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = (2 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    p.style.animationDuration = (3 + Math.random() * 3) + 's';
+    p.style.animationDelay = (Math.random() * 3) + 's';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.boxShadow = `0 0 ${8 + Math.random() * 15}px ${p.style.background}`;
+    freqStream.appendChild(p);
+  }
+}
+
+// ── ROTATE ──
+let rotateInterval = null;
+function startRotate() {
+  if (rotateInterval) clearInterval(rotateInterval);
+  let angle = 0;
+  rotateInterval = setInterval(() => {
+    if (state.rotate) { angle += 0.25; panorama.style.transform = `rotateX(5deg) rotateY(${angle}deg)`; }
+  }, 50);
+}
+function toggleRotate() {
+  state.rotate = !state.rotate;
+  document.getElementById('btnRotate').classList.toggle('active');
+  document.getElementById('btnRotate').textContent = state.rotate ? '⟳ ROTATE' : '⏸ PAUSE';
+}
+
+// ── SET FUNCTIONS (für Legacy) ──
+function setAgentStatus(s) { state.agent = s; document.getElementById('agentStatus').textContent = s; }
+function setCenterInfo(t) { document.getElementById('centerInfo').textContent = t; }
+function setRespoStatus(s) { document.getElementById('respoStatus').textContent = s; }
+
+// ── HSF MODULES (angepasst, mit KlicK‑Integration) ──
+function runHelp() {
+  setAgentStatus('HELP'); setCenterInfo('🆘 HELP · Soforthilfe aktiv');
+  setRespoStatus('help');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="help.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#88ff44';
+  scannerEl.style.boxShadow = '0 0 40px rgba(136,255,68,0.2)';
+  window.economy?.addKlick(2);
+}
+function runError() {
+  setAgentStatus('ERROR'); setCenterInfo('⚠️ ERROR · Keine Fehler');
+  setRespoStatus('error');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="error.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ff4444';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,68,68,0.2)';
+}
+function runSense() {
+  const score = (0.6 + Math.random() * 0.4).toFixed(2);
+  setAgentStatus('SENSE'); setCenterInfo(`👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`);
+  setRespoStatus('sense');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="sense.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
+  window.economy?.addKlick(1);
+}
+function runWraight() {
+  const erlaubt = Math.random() > 0.25;
+  setAgentStatus('WRAIGHT');
+  setCenterInfo(`✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`);
+  setRespoStatus('wraight');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="wraight.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = erlaubt ? '#88ff44' : '#ff4444';
+  scannerEl.style.boxShadow = erlaubt ? '0 0 40px rgba(136,255,68,0.2)' : '0 0 40px rgba(255,68,68,0.2)';
+  if (erlaubt) window.economy?.addKlick(3);
+  return erlaubt;
+}
+function runCoach() {
+  const erlaubt = runWraight();
+  if (!erlaubt) {
+    setAgentStatus('COACH-blockiert'); setCenterInfo('🧑‍🏫 COACH blockiert · WRAIGHT ist ROT');
+    return;
+  }
+  setAgentStatus('COACH');
+  setCenterInfo('🧑‍🏫 COACH · führend · ich werde nicht geführt');
+  setRespoStatus('coach');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="coach.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
+  window.economy?.addKlick(5);
+}
+function runTmp() {
+  setAgentStatus('TMP'); setCenterInfo('🌀 TMP · Temporäre Brücke · Durchfluss stabil');
+  setRespoStatus('tmp');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="tmp.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#33ccff';
+  scannerEl.style.boxShadow = '0 0 40px rgba(51,204,255,0.2)';
+  window.economy?.addKlick(1);
+}
+function runFull() {
+  const erlaubt = runWraight();
+  setAgentStatus('FULL');
+  setCenterInfo(`🔮 VOLLSCHALTUNG · ${erlaubt ? '✅ System aktiv' : '⛔ System blockiert'}`);
+  setRespoStatus('full');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.add('active'));
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.3)';
+  scannerEl.style.animation = 'scannerPulse 1s ease-in-out infinite';
+  if (erlaubt) window.economy?.addKlick(10);
+}
+
+// ── MXU ──
+let mxuCycle = 0;
+const MXU_MODES = ['SYNC', 'OS', 'BOOT', 'CORE', 'META'];
+function runMxu() {
+  mxuCycle = (mxuCycle + 1) % MXU_MODES.length;
+  const mode = MXU_MODES[mxuCycle];
+  document.getElementById('mxuDisplay').textContent = mode;
+  setCenterInfo(`⚡ MXU · ${mode} · Achsen aktiv`);
+  setRespoStatus('mxu');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  const colors = { SYNC: '#88ff44', OS: '#ff4444', BOOT: '#ff8c00', CORE: '#00ccff', META: '#ff66ff' };
+  scannerEl.style.borderColor = colors[mode] || '#33ccff';
+  scannerEl.style.boxShadow = `0 0 40px ${colors[mode] || '#33ccff'}33`;
+}
+
+// ── PENTHOUSE ──
+function goPenthouse() {
+  document.getElementById('btnPenth').classList.toggle('active');
+  document.querySelector('.ort-marker').style.animation = 'none';
+  setTimeout(() => {
+    document.querySelector('.ort-marker').style.animation = 'markerPulse 2s ease-in-out infinite';
+  }, 10);
+  setCenterInfo('🏠 PENTHOUSE · 360°');
+}
+
+// ── RESET ──
+function runReset() {
+  state.score = 0; document.getElementById('scoreVal').textContent = '0';
+  setAgentStatus('bereit');
+  setCenterInfo('⟲ RESET · System zurückgesetzt');
+  setRespoStatus('synthesis');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
+  scannerEl.style.boxShadow = 'none';
+  scannerEl.style.animation = 'scannerPulse 3s ease-in-out infinite';
+  document.getElementById('mxuDisplay').textContent = 'SYNC';
+  // auch die KlicK‑ZacK‑Ökonomie zurücksetzen
+  if (window.economy) {
+    window.economy.reset();
+  }
+}
+
+// ── FREQ ──
+function toggleFreq() {
+  state.freq = state.freq === 12 ? 24 : 12;
+  document.getElementById('btnFreq').classList.toggle('active');
+  document.getElementById('freqDisplay').textContent = state.freq + 'e';
+  buildFreqParticles();
+}
+
+// ── SCAN ──
+function toggleScan() {
+  state.scan = !state.scan;
+  document.getElementById('btnScan').classList.toggle('active');
+  if (state.scan) {
+    scannerEl.style.borderColor = 'rgba(255,221,0,0.5)';
+    scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.15)';
+    document.getElementById('btnScan').textContent = '🔍 SCAN·ON';
+    setRespoStatus('scanning');
+    setCenterInfo('🔍 SCAN · aktiv');
+  } else {
+    scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
+    scannerEl.style.boxShadow = 'none';
+    document.getElementById('btnScan').textContent = '🔍 SCAN';
+    setRespoStatus('synthesis');
+    setCenterInfo('RESPO.synthesis · GEO.TRANS');
+  }
+}
+
+// ── CONTROLS (Legacy) ──
+document.getElementById('btnReset').onclick = runReset;
+document.getElementById('btnRotate').onclick = toggleRotate;
+document.getElementById('btnFreq').onclick = toggleFreq;
+document.getElementById('btnScan').onclick = toggleScan;
+document.getElementById('btnHelp').onclick = runHelp;
+document.getElementById('btnError').onclick = runError;
+document.getElementById('btnSense').onclick = runSense;
+document.getElementById('btnWraight').onclick = runWraight;
+document.getElementById('btnCoach').onclick = runCoach;
+document.getElementById('btnTmp').onclick = runTmp;
+document.getElementById('btnFull').onclick = runFull;
+document.getElementById('btnMxu').onclick = runMxu;
+document.getElementById('btnPenth').onclick = goPenthouse;
+
+// ── TASTATUR (Legacy + KlicK) ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.key === 'Space') {
+    e.preventDefault();
+    if (window.economy) window.economy.addKlick(1);
+    // zusätzlich Klick-Effekt
+  }
+  if (e.key === 'r' || e.key === 'R') runReset();
+  if (e.key === 'f' || e.key === 'F') toggleFreq();
+  if (e.key === 's' || e.key === 'S') toggleScan();
+  if (e.key === 'h' || e.key === 'H') runHelp();
+  if (e.key === 'e' || e.key === 'E') runError();
+  if (e.key === 'w' || e.key === 'W') runWraight();
+  if (e.key === 'c' || e.key === 'C') runCoach();
+  if (e.key === 't' || e.key === 'T') runTmp();
+  if (e.key === 'f' || e.key === 'F') runFull();
+  if (e.key === 'm' || e.key === 'M') runMxu();
+  if (e.key === 'p' || e.key === 'P') goPenthouse();
+});
+
+// ── AUTO‑KLICK über Schieberegler ──
+let autoInterval = null;
+document.getElementById('autoSpeed').addEventListener('input', function() {
+  const val = parseInt(this.value);
+  if (autoInterval) clearInterval(autoInterval);
+  if (val > 0) {
+    const interval = Math.max(100, 1000 / val);
+    autoInterval = setInterval(() => {
+      if (window.economy) window.economy.addKlick(1);
+    }, interval);
+  } else {
+    autoInterval = null;
+  }
+});
+
+// ── INIT ──
+buildTmpRooms();
+buildFreqParticles();
+startRotate();
+setCenterInfo('🏠 PENTHOUSE 6.0 · KLICK & ZACK · bereit');
+console.log('🏠 PENTHOUSE 6.0 · KLICK & ZACK · geladen');
+</script>
 </body>
 </html>
