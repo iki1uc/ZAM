@@ -1,661 +1,757 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🏠 PENTHOUSE 6.0 · KLICK & ZACK</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌀 STAGE‑Reich · Index · Corridor · Legitimation</title>
 
-<style>
-* { box-sizing:border-box; margin:0; padding:0; }
-body {
-  background: #0a0a0f;
-  color: #00ffff;
-  font-family: 'Consolas', 'Courier New', monospace;
-  overflow: hidden;
-  height: 100vh;
-  perspective: 1200px;
-}
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 44px;
-  background: rgba(10,10,18,0.92);
-  border-bottom: 2px solid #33ccff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 12px;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-}
-.header h1 { color: #33ccff; font-size: 14px; letter-spacing: 2px; }
-.header h1 span { color: #ffdd00; }
-.header .info { color: #6688aa; font-size: 9px; display: flex; gap: 10px; }
-.header .info .freq { color: #ff66ff; }
-.header .info .klick { color: #88ff44; }
+  <!-- ========================================================= -->
+  <!-- KERN-MODULE (global, werden von allen Etagen genutzt)     -->
+  <!-- ========================================================= -->
+  <script src="coord.js"></script>
+  <script src="aufzug.js"></script>
+  <script src="OS_CORE.js"></script>
 
-#penthouse {
-  position: fixed;
-  top: 44px;
-  left: 0;
-  right: 0;
-  bottom: 56px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px;
-  background: radial-gradient(ellipse at center, #0a0a1a, #000000);
-  overflow: hidden;
-}
-.panorama {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  height: 100%;
-  max-height: 600px;
-  transform: rotateX(5deg) rotateY(0deg);
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-.floor {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) rotateX(90deg) translateZ(-160px);
-  width: 600px;
-  height: 600px;
-  background: repeating-conic-gradient(from 0deg at 50% 50%, #1a1a3a 0deg 10deg, #0a0a1a 10deg 20deg);
-  border-radius: 50%;
-  opacity: 0.25;
-  animation: floorSpin 40s linear infinite;
-  box-shadow: 0 0 80px rgba(51,204,255,0.08);
-}
-@keyframes floorSpin {
-  from { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(0deg); }
-  to { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(360deg); }
-}
-.freq-stream {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.freq-particle {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  animation: freqRise linear infinite;
-}
-@keyframes freqRise {
-  0% { transform: translateY(100%) scale(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100%) scale(1); opacity: 0; }
-}
-.axis-6d {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
-  border: 1px solid rgba(51,204,255,0.04);
-  animation: axisSpin 60s linear infinite;
-}
-.axis-6d .ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 1px solid rgba(51,204,255,0.05);
-}
-.axis-6d .ring.r1 { width: 80%; height: 80%; }
-.axis-6d .ring.r2 { width: 60%; height: 60%; }
-.axis-6d .ring.r3 { width: 40%; height: 40%; }
-.axis-6d .ring.r4 { width: 20%; height: 20%; border-color: rgba(255,221,0,0.1); }
-@keyframes axisSpin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-.scanner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 280px;
-  height: 280px;
-  border: 2px solid rgba(51,204,255,0.1);
-  border-radius: 50%;
-  animation: scannerPulse 3s ease-in-out infinite;
-}
-.scanner::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  border: 1px solid rgba(255,221,0,0.06);
-  border-radius: 50%;
-  animation: scannerPulse 2s ease-in-out infinite 0.5s;
-}
-.scanner::after {
-  content: '●';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffdd00;
-  font-size: 9px;
-  animation: scannerBlink 1s ease-in-out infinite;
-}
-@keyframes scannerPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.25; }
-  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.6; }
-}
-@keyframes scannerBlink {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; text-shadow: 0 0 40px #ffdd00; }
-}
-.ort-marker {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffdd00;
-  font-size: 36px;
-  text-shadow: 0 0 60px rgba(255,221,0,0.25);
-  animation: markerPulse 2s ease-in-out infinite;
-}
-@keyframes markerPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
-  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
-}
-.tmp-rooms {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-.tmp-room {
-  position: absolute;
-  padding: 3px 7px;
-  background: rgba(17,17,34,0.5);
-  border: 1px solid rgba(51,204,255,0.06);
-  border-radius: 4px;
-  font-size: 6px;
-  color: #6688aa;
-  backdrop-filter: blur(4px);
-  transition: all 0.4s;
-  cursor: pointer;
-  pointer-events: auto;
-  user-select: none;
-}
-.tmp-room:hover { border-color: #33ccff; color: #00ffff; transform: scale(1.12); box-shadow: 0 0 20px rgba(51,204,255,0.08); }
-.tmp-room.active { border-color: #ffdd00; color: #ffdd00; background: rgba(255,221,0,0.06); }
-.tmp-room.help { border-color: #88ff44; color: #88ff44; }
-.tmp-room.error { border-color: #ff4444; color: #ff4444; }
+  <!-- ========================================================= -->
+  <!-- ACHSEN-MODULE (b/h/t – HDF-Cube-Grundlage)               -->
+  <!-- ========================================================= -->
+  <script src="b/axiom.map.js"></script>
+  <script src="h/axiom.map.js"></script>
+  <script src="t/axiom.map.js"></script>
 
-#status {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 44px;
-  background: rgba(10,10,18,0.92);
-  border-top: 2px solid #2a2a3a;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 12px;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-  font-size: 9px;
-  color: #6688aa;
-}
-#status .center { color: #33ccff; }
-#status .center span { color: #ff66ff; }
-#status .right span { color: #88ff44; }
-#status .klick-display { color: #88ff44; font-weight: bold; margin-right: 8px; }
-#status .zack-display { color: #ffdd00; font-weight: bold; }
+  <!-- ========================================================= -->
+  <!-- NC-SUITE (Figur, Kraft, Space, Time)                     -->
+  <!-- ========================================================= -->
+  <script src="NC_figur.js"></script>
+  <script src="NC_kraft.js"></script>
+  <script src="NC_space.js"></script>
+  <script src="NC_time.js"></script>
+  <script src="NC.suite"></script> <!-- bündelt die vier Module -->
 
-#controls {
-  position: fixed;
-  bottom: 48px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 3px;
-  z-index: 1001;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 98%;
-}
-#controls button {
-  background: rgba(17,17,34,0.7);
-  color: #6688aa;
-  border: 1px solid #2a2a4a;
-  padding: 3px 10px;
-  cursor: pointer;
-  font-family: 'Consolas', monospace;
-  font-size: 7px;
-  border-radius: 3px;
-  transition: all 0.3s;
-  backdrop-filter: blur(4px);
-}
-#controls button:hover { background: #1a1a3a; border-color: #66ccff; color: #00ffff; }
-#controls button.active { background: #1a2a4a; color: #00ff88; border-color: #00ff88; }
-#controls button.gold { color: #ffdd00; border-color: #554400; }
-#controls button.gold:hover { background: #2a1a00; border-color: #ffdd00; }
-#controls button.red { color: #ff4444; border-color: #442222; }
-#controls button.red:hover { background: #2a0a0a; border-color: #ff4444; }
-#controls button.green { color: #88ff44; border-color: #224422; }
-#controls button.green:hover { background: #0a2a0a; border-color: #88ff44; }
-#controls button.mxu { color: #ff66ff; border-color: #442244; }
-#controls button.mxu:hover { background: #2a0a2a; border-color: #ff66ff; }
-#controls button.klick-btn { color: #88ff44; border-color: #88ff44; font-size: 9px; padding: 4px 16px; }
+  <!-- ========================================================= -->
+  <!-- VEC-MODULE (Vektoren & Koordinaten)                       -->
+  <!-- ========================================================= -->
+  <script src="vec.js"></script>
+  <script src="vec3.js"></script>
+  <script src="vec9.js"></script>
 
-@media (max-width: 700px) {
-  .header h1 { font-size: 10px; }
-  .header .info { font-size: 7px; gap: 4px; }
-  .floor { width: 300px; height: 300px; }
-  .axis-6d { width: 220px; height: 220px; }
-  .scanner { width: 140px; height: 140px; }
-  .scanner::before { width: 70px; height: 70px; }
-  .ort-marker { font-size: 24px; }
-  .tmp-room { font-size: 5px; padding: 2px 4px; }
-  #controls button { font-size: 6px; padding: 2px 6px; }
-}
-</style>
+  <style>
+    /* ==========================================================
+       GLOBALES STYLING – dunkel, konsolenhaft, übersichtlich
+       ========================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0b0b0b;
+      color: #e0e0e0;
+      font-family: 'Consolas', 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      padding: 24px 20px 30px;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #2a3a4a;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      color: #6cf;
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .header h1 small {
+      color: #5a7a8a;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .status-leds {
+      display: flex;
+      gap: 18px;
+      font-size: 12px;
+      color: #5a7a8a;
+    }
+
+    .status-leds span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .led {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2a4a5a;
+      transition: 0.3s;
+    }
+
+    .led.on {
+      background: #8cf0d0;
+      box-shadow: 0 0 12px #8cf0d0;
+    }
+
+    .led.pulse {
+      background: #f0d080;
+      animation: pulse 1.2s infinite;
+    }
+
+    .led.off {
+      background: #2a4a5a;
+    }
+
+    .led.sync {
+      background: #b388ff;
+      box-shadow: 0 0 12px #b388ff;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.8); }
+      50%      { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ─── ETAGEN-GRID (Corridor) ────────────────────────────── */
+    .section-title {
+      color: #f0d080;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      margin: 24px 0 12px;
+      border-bottom: 1px solid #1a2a3a;
+      padding-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title .badge {
+      font-size: 10px;
+      color: #5a7a8a;
+      font-weight: 300;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #2a3a4a;
+      border-radius: 12px;
+      padding: 16px 18px;
+      text-decoration: none;
+      color: #e0e0e0;
+      display: block;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      border-color: #6cf;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .card .icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .card .name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #d0e0e8;
+    }
+
+    .card .path {
+      font-size: 10px;
+      color: #4a5a6a;
+      margin-top: 4px;
+      word-break: break-all;
+    }
+
+    .card .coord-badge {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 10px;
+      color: #b388ff;
+      background: rgba(179, 136, 255, 0.08);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(179, 136, 255, 0.1);
+    }
+
+    .card .status-tag {
+      display: inline-block;
+      font-size: 8px;
+      padding: 1px 10px;
+      border-radius: 12px;
+      margin-top: 6px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .card .status-tag.legit {
+      border: 1px solid #8cf0d0;
+      color: #8cf0d0;
+    }
+
+    .card .status-tag.pending {
+      border: 1px solid #f0d080;
+      color: #f0d080;
+    }
+
+    /* ─── KOORDINATEN-ANZEIGE ───────────────────────────────── */
+    .coord-box {
+      background: #111;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #2a3a4a;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #8ab0c0;
+      margin: 6px 0 12px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .coord-box .axis-label {
+      color: #f0d080;
+      font-weight: bold;
+    }
+
+    .coord-box .stage-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 4px;
+      border-bottom: 1px solid #0e1620;
+    }
+
+    .coord-box .stage-entry .id {
+      color: #d0e0e8;
+    }
+
+    .coord-box .stage-entry .pos {
+      color: #b388ff;
+    }
+
+    /* ─── LOG ────────────────────────────────────────────────── */
+    .log-box {
+      background: #111;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #2a3a4a;
+      font-size: 11px;
+      line-height: 1.6;
+      max-height: 160px;
+      overflow-y: auto;
+      color: #5a7a8a;
+      margin-top: 6px;
+    }
+
+    .log-box .entry {
+      border-bottom: 1px solid #0e1620;
+      padding: 2px 0;
+    }
+
+    .log-box .time {
+      color: #2a3a4a;
+    }
+
+    .log-box .floor {
+      color: #6cf;
+    }
+
+    .log-box .msg {
+      color: #8ab0c0;
+    }
+
+    /* ─── SYNC-BAR ───────────────────────────────────────────── */
+    .sync-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: #0e141c;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid #1a2a3a;
+      margin: 16px 0 6px;
+    }
+
+    .sync-bar .label {
+      font-size: 11px;
+      color: #b388ff;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sync-bar input {
+      flex: 1;
+      background: #1a1a2a;
+      border: 1px solid #2a3a4a;
+      color: #d0e0e8;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: inherit;
+      min-width: 120px;
+    }
+
+    .sync-bar input::placeholder {
+      color: #4a5a6a;
+    }
+
+    .sync-bar button {
+      background: #1a1a2a;
+      border: 1px solid #2a3a4a;
+      color: #9ab0c0;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .sync-bar button:hover {
+      background: #2a3a4a;
+      border-color: #6cf;
+      color: #d0e8f8;
+    }
+
+    .sync-bar button.sync {
+      border-color: rgba(179, 136, 255, 0.2);
+      color: #b388ff;
+    }
+
+    .sync-bar button.sync:hover {
+      background: rgba(179, 136, 255, 0.1);
+      border-color: #b388ff;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 8px 16px;
+      background: #0e141c;
+      border-radius: 12px;
+      border: 1px solid #1a2a3a;
+      font-size: 10px;
+      color: #3a4a5a;
+    }
+
+    .footer .gold {
+      color: #f0d080;
+    }
+
+    .footer .stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ─── SCROLLBAR ──────────────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #080c12;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1a2a3a;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>🏠 PENTHOUSE · <span>6.0</span> · KLICK & ZACK</h1>
-  <div class="info">
-    <span class="freq" id="freqDisplay">12e</span>
-    <span>6D · <span id="d5">HSF</span></span>
-    <span>RESPO · <span id="respoStatus">synthesis</span></span>
-    <span>MXU · <span id="mxuDisplay">SYNC</span></span>
-    <span class="klick">KlicK: <span id="klickCount">0</span></span>
-    <span>ZacK: <span id="zackCount">0</span></span>
+<div class="container">
+
+  <!-- ========================================================= -->
+  <!-- HEADER                                                    -->
+  <!-- ========================================================= -->
+  <div class="header">
+    <h1>🌀 STAGE‑Reich <small>Corridor · Legitimation · Technik</small></h1>
+    <div class="status-leds">
+      <span><span class="led on" id="ledSystem"></span> SYSTEM</span>
+      <span><span class="led sync" id="ledSync"></span> SYNC</span>
+      <span><span class="led pulse" id="ledReich"></span> REICH</span>
+    </div>
   </div>
-</div>
 
-<div id="penthouse">
-  <div class="panorama" id="panorama">
-    <div class="floor"></div>
-    <div class="freq-stream" id="freqStream"></div>
-    <div class="axis-6d"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div></div>
-    <div class="scanner" id="scannerEl"></div>
-    <div class="ort-marker">◉</div>
-    <div class="tmp-rooms" id="tmpRooms"></div>
+  <!-- ========================================================= -->
+  <!-- ETAGEN-CORRIDOR (alle legitimierten Stages)              -->
+  <!-- ========================================================= -->
+  <div class="section-title">
+    🏢 ETAGEN · CORRIDOR
+    <span class="badge" id="floorCount">0 Etagen</span>
   </div>
+  <div class="grid" id="floorGrid"></div>
+
+  <!-- ========================================================= -->
+  <!-- KOORDINATEN-SYSTEM (b/h/t + Stages)                      -->
+  <!-- ========================================================= -->
+  <div class="section-title">
+    🧭 KOORDINATEN · b/h/t · HDF-Cube
+    <span class="badge" id="coordCount">0 registriert</span>
+  </div>
+  <div class="coord-box" id="coordBox">
+    Koordinaten werden geladen…
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- SYNC-BAR (arg.sync – Kommunikation mit Etagen)           -->
+  <!-- ========================================================= -->
+  <div class="sync-bar">
+    <span class="label"><span class="led sync" style="display:inline-block;width:8px;height:8px;"></span> arg.sync</span>
+    <input type="text" id="syncInput" placeholder="Nachricht an Etagen…" value="sync:orakel">
+    <button class="sync" id="btnSync">🔄 SYNC</button>
+    <button id="btnBroadcast">📡 BROADCAST</button>
+    <button id="btnResetAll">⟲ RESET</button>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- GETEILTES LOG (etagenübergreifend)                       -->
+  <!-- ========================================================= -->
+  <div class="section-title">
+    📜 GETEILTES LOG
+    <span class="badge" id="logCount">0 Einträge</span>
+  </div>
+  <div class="log-box" id="logBox"></div>
+
+  <!-- ========================================================= -->
+  <!-- FOOTER                                                    -->
+  <!-- ========================================================= -->
+  <div class="footer">
+    <span class="stat"><span class="gold">★</span> STAGE‑Reich · Corridor · Legitimation</span>
+    <span class="stat">🔷 <span id="fActive">0</span> aktive Etagen</span>
+    <span class="stat">⚡ <span id="fSyncCount">0</span> SYNCs</span>
+    <span class="stat">⌨️  s=Sync  b=Broadcast  r=Reset</span>
+  </div>
+
 </div>
 
-<div id="controls">
-  <button class="klick-btn green" id="btnKlick">🔘 KLICK</button>
-  <button class="gold" id="btnReset">⟲ RESET</button>
-  <button id="btnRotate" class="active">⟳ ROTATE</button>
-  <button id="btnFreq">📡 FREQ</button>
-  <button id="btnScan">🔍 SCAN</button>
-  <button class="green" id="btnHelp">🆘 HELP</button>
-  <button class="red" id="btnError">⚠️ ERROR</button>
-  <button id="btnSense">👁️ SENSE</button>
-  <button id="btnWraight">✅ WRAIGHT</button>
-  <button class="gold" id="btnCoach">🧑‍🏫 COACH</button>
-  <button id="btnTmp">🌀 TMP</button>
-  <button id="btnFull">🔮 FULL</button>
-  <button class="mxu" id="btnMxu">⚡ MXU</button>
-  <button class="gold" id="btnPenth">🏠 PENTHOUSE</button>
-  <span style="color:#6688aa;font-size:7px;display:flex;align-items:center;gap:4px;">
-    Auto: <input type="range" id="autoSpeed" min="0" max="10" value="1" style="width:40px;background:#1a1a2a;">
-  </span>
-</div>
+<script>
+  "use strict";
 
-<div id="status">
-  <span>🧠 <span id="agentStatus">bereit</span></span>
-  <span class="center">◉ <span id="centerInfo">RESPO.synthesis · GEO.TRANS</span></span>
-  <span class="right">
-    <span class="klick-display">KlicK: <span id="statusKlick">0</span></span>
-    <span class="zack-display">ZacK: <span id="statusZack">0</span></span>
-    <span>SCORE: <span id="scoreVal">0</span></span>
-  </span>
-</div>
+  /* ==============================================================
+     STAGE‑Reich · Corridor · Legitimation
+     Diese index.html ist der zentrale Einstiegspunkt.
+     Sie lädt alle Module, zeigt alle Etagen an,
+     legitimiert stage.html als Corridor und
+     integriert etage-8-orbit-viewer als Technik‑Etage.
+     ============================================================== */
 
-<script type="importmap">
-{
-  "imports": {
-    "./economy.js": "./economy.js",
-    "./ui.js": "./ui.js"
-  }
-}
-</script>
-
-<script type="module">
-// ============================================================
-// PENTHOUSE 6.0 · KLICK & ZACK – Hauptmodul
-// Importiert die Ökonomie‑ und UI‑Module
-// ============================================================
-import { Economy } from './economy.js';
-import { initUI } from './ui.js';
-
-// ── Globale Instanz ──
-window.economy = new Economy();
-
-// ── UI initialisieren (bindet Events, Updates) ──
-initUI(window.economy);
-
-console.log('🏠 PENTHOUSE 6.0 · KLICK & ZACK · geladen');
-console.log('⌨️  Leertaste = KlicK, r=Reset, h=Help, e=Error, w=Wraight, c=Coach, t=Tmp, f=Full, m=Mxu, p=Penthouse');
-console.log('🔘 KlicK-Button oder Leertaste drücken, um KlicK zu generieren.');
-</script>
-
-<script type="module">
-// ============================================================
-// PENTHOUSE 6.0 · KLICK & ZACK – Legacy Penthouse‑Funktionen
-// (unverändert, aber jetzt mit KlicK‑Integration)
-// ============================================================
-
-// ── STATE (nur für Penthouse‑spezifische Dinge) ──
-let state = {
-  rotate: true, freq: 12, scan: false, score: 0, angle: 0,
-  agent: 'bereit', wraight: '⏳', coach: 'bereit', mxu: 'SYNC'
-};
-
-// ── DOM REFS ──
-const panorama = document.getElementById('panorama');
-const freqStream = document.getElementById('freqStream');
-const tmpRooms = document.getElementById('tmpRooms');
-const scannerEl = document.getElementById('scannerEl');
-
-// ── TMP RÄUME ──
-const TMP_ROOMS = [
-  { id: "help.tmp", x: 8, y: 18, label: "🆘" },
-  { id: "error.tmp", x: 82, y: 22, label: "⚠️" },
-  { id: "sense.tmp", x: 42, y: 12, label: "👁️" },
-  { id: "wraight.tmp", x: 68, y: 72, label: "✅" },
-  { id: "coach.tmp", x: 22, y: 78, label: "🧑‍🏫" },
-  { id: "tmp.tmp", x: 52, y: 52, label: "🌀" },
-  { id: "push.tmp", x: 12, y: 48, label: "▶" },
-  { id: "flow.tmp", x: 78, y: 48, label: "~" },
-  { id: "spin.tmp", x: 48, y: 32, label: "⟳" },
-  { id: "root.tmp", x: 32, y: 62, label: "◈" }
-];
-
-function buildTmpRooms() {
-  tmpRooms.innerHTML = '';
-  TMP_ROOMS.forEach(room => {
-    const el = document.createElement('div');
-    el.className = 'tmp-room';
-    el.dataset.id = room.id;
-    el.style.left = room.x + '%';
-    el.style.top = room.y + '%';
-    el.textContent = room.label + ' ' + room.id;
-    el.onclick = () => {
-      // KlicK beim Anklicken eines Raums (optional)
-      window.economy?.addKlick(1);
-      state.score += 1;
-      document.getElementById('scoreVal').textContent = Math.floor(state.score);
-      el.classList.toggle('active');
-      const label = room.id.replace('.tmp','').toUpperCase();
-      document.getElementById('centerInfo').textContent = `📍 ${label} · aktiv`;
+  // ─── 1. ETAGEN-REGISTRY (aus aufzug.js) ──────────────────────
+  // Wenn Aufzug.FLOORS nicht existiert, definieren wir sie hier.
+  // So ist die Seite auch ohne externe aufzug.js lauffähig.
+  if (typeof Aufzug === 'undefined') {
+    console.warn('⚠️ aufzug.js nicht gefunden – lege eigene FLOORS an.');
+    window.Aufzug = {
+      FLOORS: [],
+      init: function() {},
+      log: function() {},
+      setSharedValue: function() {},
+      getSharedValue: function() { return undefined; },
+      getSharedLog: function() { return []; }
     };
-    tmpRooms.appendChild(el);
+  }
+
+  // Falls die FLOORS noch leer sind, füllen wir sie mit den
+  // wichtigsten Etagen – inklusive stage.html und orbit-viewer.
+  if (Aufzug.FLOORS.length === 0) {
+    Aufzug.FLOORS = [
+      { id: 'stage', name: '🎛️ Stage · Corridor', path: 'stage.html', icon: '🎛️', isRoot: false },
+      { id: 'ui', name: '🖥️ UI · Interface', path: 'ui.html', icon: '🖥️', isRoot: false },
+      { id: 'etage-8-orbit-viewer', name: '🌀 Orbit-Viewer · Etage 8', path: 'etage-8-orbit-viewer/index.html', icon: '🌀', isRoot: false },
+      { id: 'root', name: '🛗 ROOT', path: 'index.html', icon: '🛗', isRoot: true }
+    ];
+  }
+
+  // ─── 2. KOORDINATEN-REGISTRIERUNG ─────────────────────────────
+  // Wenn COORD nicht existiert, bauen wir eine minimale Version.
+  if (typeof COORD === 'undefined') {
+    console.warn('⚠️ coord.js nicht gefunden – lege eigene COORD an.');
+    window.COORD = {
+      axes: {
+        b: 'Breite (X‑Achse)',
+        h: 'Höhe (Y‑Achse)',
+        t: 'Tiefe (Z‑Achse)'
+      },
+      stages: {},
+      register: function(id, x, y, z) {
+        this.stages[id] = { x, y, z };
+      },
+      get: function(id) {
+        return this.stages[id] || null;
+      }
+    };
+  }
+
+  // Alle Etagen aus Aufzug.FLOORS in COORD registrieren (falls noch nicht geschehen)
+  Aufzug.FLOORS.forEach(f => {
+    if (!f.isRoot && !COORD.stages[f.id]) {
+      // Standard-Koordinaten vergeben: x = Index, y = 0, z = 0
+      const idx = Aufzug.FLOORS.indexOf(f);
+      COORD.register(f.id, idx + 1, 0, 0);
+    }
   });
-}
 
-// ── FREQ PARTICLES ──
-function buildFreqParticles() {
-  freqStream.innerHTML = '';
-  const count = 18 + Math.floor(Math.random() * 12);
-  const colors = ['#33ccff', '#ffdd00', '#ff66ff', '#88ff44'];
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('div');
-    p.className = 'freq-particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.width = (2 + Math.random() * 3) + 'px';
-    p.style.height = p.style.width;
-    p.style.animationDuration = (3 + Math.random() * 3) + 's';
-    p.style.animationDelay = (Math.random() * 3) + 's';
-    p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.boxShadow = `0 0 ${8 + Math.random() * 15}px ${p.style.background}`;
-    freqStream.appendChild(p);
+  // Spezielle Koordinaten für wichtige Etagen
+  COORD.register('stage', 1, 0, 0);
+  COORD.register('ui', 2, 0, 0);
+  COORD.register('etage-8-orbit-viewer', 3, 8, 1);
+
+  // Achsen registrieren (falls nicht schon in coord.js)
+  if (!COORD.stages.b) COORD.register('b', 1, 0, 0);
+  if (!COORD.stages.h) COORD.register('h', 0, 1, 0);
+  if (!COORD.stages.t) COORD.register('t', 0, 0, 1);
+
+  // ─── 3. DOM-REFERENZEN ────────────────────────────────────────
+  const floorGrid = document.getElementById('floorGrid');
+  const coordBox = document.getElementById('coordBox');
+  const logBox = document.getElementById('logBox');
+  const syncInput = document.getElementById('syncInput');
+
+  // ─── 4. ETAGEN ANZEIGEN ──────────────────────────────────────
+  function renderFloors() {
+    floorGrid.innerHTML = '';
+    let count = 0;
+
+    Aufzug.FLOORS.forEach(f => {
+      if (f.isRoot) return;
+      count++;
+
+      const coord = COORD.get(f.id) || { x: '?', y: '?', z: '?' };
+      const isLegit = !!COORD.get(f.id);
+
+      const card = document.createElement('a');
+      card.className = 'card';
+      card.href = f.path;
+      card.innerHTML = `
+        <span class="icon">${f.icon || '📁'}</span>
+        <span class="name">${f.name}</span>
+        <span class="coord-badge">(${coord.x}, ${coord.y}, ${coord.z})</span>
+        <div class="path">${f.path}</div>
+        <span class="status-tag ${isLegit ? 'legit' : 'pending'}">${isLegit ? '✅ legitimiert' : '⏳ pending'}</span>
+      `;
+      floorGrid.appendChild(card);
+    });
+
+    document.getElementById('floorCount').textContent = `${count} Etagen`;
+    document.getElementById('fActive').textContent = count;
   }
-}
 
-// ── ROTATE ──
-let rotateInterval = null;
-function startRotate() {
-  if (rotateInterval) clearInterval(rotateInterval);
-  let angle = 0;
-  rotateInterval = setInterval(() => {
-    if (state.rotate) { angle += 0.25; panorama.style.transform = `rotateX(5deg) rotateY(${angle}deg)`; }
-  }, 50);
-}
-function toggleRotate() {
-  state.rotate = !state.rotate;
-  document.getElementById('btnRotate').classList.toggle('active');
-  document.getElementById('btnRotate').textContent = state.rotate ? '⟳ ROTATE' : '⏸ PAUSE';
-}
+  // ─── 5. KOORDINATEN ANZEIGEN ──────────────────────────────────
+  function renderCoords() {
+    const out = [];
 
-// ── SET FUNCTIONS (für Legacy) ──
-function setAgentStatus(s) { state.agent = s; document.getElementById('agentStatus').textContent = s; }
-function setCenterInfo(t) { document.getElementById('centerInfo').textContent = t; }
-function setRespoStatus(s) { document.getElementById('respoStatus').textContent = s; }
+    // Achsen
+    out.push('<span class="axis-label">📐 Achsen:</span>');
+    Object.entries(COORD.axes || {}).forEach(([k, v]) => {
+      out.push(`&nbsp;&nbsp;• ${k}: ${v}`);
+    });
 
-// ── HSF MODULES (angepasst, mit KlicK‑Integration) ──
-function runHelp() {
-  setAgentStatus('HELP'); setCenterInfo('🆘 HELP · Soforthilfe aktiv');
-  setRespoStatus('help');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="help.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = '#88ff44';
-  scannerEl.style.boxShadow = '0 0 40px rgba(136,255,68,0.2)';
-  window.economy?.addKlick(2);
-}
-function runError() {
-  setAgentStatus('ERROR'); setCenterInfo('⚠️ ERROR · Keine Fehler');
-  setRespoStatus('error');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="error.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = '#ff4444';
-  scannerEl.style.boxShadow = '0 0 40px rgba(255,68,68,0.2)';
-}
-function runSense() {
-  const score = (0.6 + Math.random() * 0.4).toFixed(2);
-  setAgentStatus('SENSE'); setCenterInfo(`👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`);
-  setRespoStatus('sense');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="sense.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = '#ffdd00';
-  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
-  window.economy?.addKlick(1);
-}
-function runWraight() {
-  const erlaubt = Math.random() > 0.25;
-  setAgentStatus('WRAIGHT');
-  setCenterInfo(`✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`);
-  setRespoStatus('wraight');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="wraight.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = erlaubt ? '#88ff44' : '#ff4444';
-  scannerEl.style.boxShadow = erlaubt ? '0 0 40px rgba(136,255,68,0.2)' : '0 0 40px rgba(255,68,68,0.2)';
-  if (erlaubt) window.economy?.addKlick(3);
-  return erlaubt;
-}
-function runCoach() {
-  const erlaubt = runWraight();
-  if (!erlaubt) {
-    setAgentStatus('COACH-blockiert'); setCenterInfo('🧑‍🏫 COACH blockiert · WRAIGHT ist ROT');
-    return;
+    // Stages
+    out.push('<br><span class="axis-label">🏢 Stages:</span>');
+    const entries = Object.entries(COORD.stages || {});
+    if (entries.length === 0) {
+      out.push('&nbsp;&nbsp;– keine registriert –');
+    } else {
+      entries.forEach(([id, c]) => {
+        out.push(`<div class="stage-entry"><span class="id">${id}</span><span class="pos">(${c.x}, ${c.y}, ${c.z})</span></div>`);
+      });
+    }
+
+    coordBox.innerHTML = out.join('');
+    document.getElementById('coordCount').textContent = `${entries.length} registriert`;
   }
-  setAgentStatus('COACH');
-  setCenterInfo('🧑‍🏫 COACH · führend · ich werde nicht geführt');
-  setRespoStatus('coach');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="coach.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = '#ffdd00';
-  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
-  window.economy?.addKlick(5);
-}
-function runTmp() {
-  setAgentStatus('TMP'); setCenterInfo('🌀 TMP · Temporäre Brücke · Durchfluss stabil');
-  setRespoStatus('tmp');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  document.querySelector('.tmp-room[data-id="tmp.tmp"]')?.classList.add('active');
-  scannerEl.style.borderColor = '#33ccff';
-  scannerEl.style.boxShadow = '0 0 40px rgba(51,204,255,0.2)';
-  window.economy?.addKlick(1);
-}
-function runFull() {
-  const erlaubt = runWraight();
-  setAgentStatus('FULL');
-  setCenterInfo(`🔮 VOLLSCHALTUNG · ${erlaubt ? '✅ System aktiv' : '⛔ System blockiert'}`);
-  setRespoStatus('full');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.add('active'));
-  scannerEl.style.borderColor = '#ffdd00';
-  scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.3)';
-  scannerEl.style.animation = 'scannerPulse 1s ease-in-out infinite';
-  if (erlaubt) window.economy?.addKlick(10);
-}
 
-// ── MXU ──
-let mxuCycle = 0;
-const MXU_MODES = ['SYNC', 'OS', 'BOOT', 'CORE', 'META'];
-function runMxu() {
-  mxuCycle = (mxuCycle + 1) % MXU_MODES.length;
-  const mode = MXU_MODES[mxuCycle];
-  document.getElementById('mxuDisplay').textContent = mode;
-  setCenterInfo(`⚡ MXU · ${mode} · Achsen aktiv`);
-  setRespoStatus('mxu');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  const colors = { SYNC: '#88ff44', OS: '#ff4444', BOOT: '#ff8c00', CORE: '#00ccff', META: '#ff66ff' };
-  scannerEl.style.borderColor = colors[mode] || '#33ccff';
-  scannerEl.style.boxShadow = `0 0 40px ${colors[mode] || '#33ccff'}33`;
-}
-
-// ── PENTHOUSE ──
-function goPenthouse() {
-  document.getElementById('btnPenth').classList.toggle('active');
-  document.querySelector('.ort-marker').style.animation = 'none';
-  setTimeout(() => {
-    document.querySelector('.ort-marker').style.animation = 'markerPulse 2s ease-in-out infinite';
-  }, 10);
-  setCenterInfo('🏠 PENTHOUSE · 360°');
-}
-
-// ── RESET ──
-function runReset() {
-  state.score = 0; document.getElementById('scoreVal').textContent = '0';
-  setAgentStatus('bereit');
-  setCenterInfo('⟲ RESET · System zurückgesetzt');
-  setRespoStatus('synthesis');
-  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
-  scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
-  scannerEl.style.boxShadow = 'none';
-  scannerEl.style.animation = 'scannerPulse 3s ease-in-out infinite';
-  document.getElementById('mxuDisplay').textContent = 'SYNC';
-  // auch die KlicK‑ZacK‑Ökonomie zurücksetzen
-  if (window.economy) {
-    window.economy.reset();
+  // ─── 6. LOG ANZEIGEN ──────────────────────────────────────────
+  function renderLog() {
+    const entries = (Aufzug.getSharedLog && Aufzug.getSharedLog()) || [];
+    logBox.innerHTML = '';
+    entries.slice().reverse().forEach(e => {
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+      entry.innerHTML = `
+        <span class="time">[${e.time || '--:--:--'}]</span>
+        <span class="floor">${e.floor || 'system'}</span>
+        <span class="msg">${e.msg || ''}</span>
+      `;
+      logBox.appendChild(entry);
+    });
+    document.getElementById('logCount').textContent = `${entries.length} Einträge`;
   }
-}
 
-// ── FREQ ──
-function toggleFreq() {
-  state.freq = state.freq === 12 ? 24 : 12;
-  document.getElementById('btnFreq').classList.toggle('active');
-  document.getElementById('freqDisplay').textContent = state.freq + 'e';
-  buildFreqParticles();
-}
+  // ─── 7. SYNC-FUNKTIONEN ──────────────────────────────────────
+  let syncCount = 0;
 
-// ── SCAN ──
-function toggleScan() {
-  state.scan = !state.scan;
-  document.getElementById('btnScan').classList.toggle('active');
-  if (state.scan) {
-    scannerEl.style.borderColor = 'rgba(255,221,0,0.5)';
-    scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.15)';
-    document.getElementById('btnScan').textContent = '🔍 SCAN·ON';
-    setRespoStatus('scanning');
-    setCenterInfo('🔍 SCAN · aktiv');
+  function doSync(message) {
+    const msg = message || syncInput.value.trim() || 'sync:orakel';
+    syncCount++;
+
+    // LED kurz aufleuchten lassen
+    const led = document.getElementById('ledSync');
+    led.className = 'led sync';
+    setTimeout(() => { led.className = 'led'; }, 400);
+
+    // In Aufzug-Log schreiben
+    if (Aufzug.log) {
+      Aufzug.log(`SYNC: ${msg}`);
+    }
+
+    // An alle Etagen per postMessage senden (wenn iframes existieren)
+    document.querySelectorAll('iframe').forEach(iframe => {
+      try {
+        iframe.contentWindow.postMessage({ type: 'arg.sync', payload: msg, from: 'orakel' }, '*');
+      } catch (_) {}
+    });
+
+    // Lokales Log
+    const logEntry = {
+      time: new Date().toLocaleTimeString('de-DE'),
+      floor: '🛗 ROOT',
+      msg: `⬆ SYNC: ${msg}`
+    };
+    if (Aufzug.getSharedLog && Array.isArray(Aufzug.getSharedLog())) {
+      Aufzug.getSharedLog().push(logEntry);
+    }
+
+    document.getElementById('fSyncCount').textContent = syncCount;
+    renderLog();
+  }
+
+  function broadcastSync() {
+    doSync(syncInput.value.trim() || 'broadcast:orakel');
+  }
+
+  function resetAll() {
+    syncCount = 0;
+    document.getElementById('fSyncCount').textContent = '0';
+    if (Aufzug.getSharedLog && Array.isArray(Aufzug.getSharedLog())) {
+      Aufzug.getSharedLog().length = 0;
+    }
+    renderLog();
+    const led = document.getElementById('ledSystem');
+    led.className = 'led';
+    setTimeout(() => { led.className = 'led on'; }, 300);
+  }
+
+  // ─── 8. EVENT-BINDING ─────────────────────────────────────────
+  document.getElementById('btnSync').addEventListener('click', () => doSync());
+  document.getElementById('btnBroadcast').addEventListener('click', broadcastSync);
+  document.getElementById('btnResetAll').addEventListener('click', resetAll);
+
+  syncInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doSync();
+  });
+
+  // ─── 9. TASTATUR ──────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 's' || e.key === 'S') { e.preventDefault(); doSync(); }
+    if (e.key === 'b' || e.key === 'B') { e.preventDefault(); broadcastSync(); }
+    if (e.key === 'r' || e.key === 'R') { e.preventDefault(); resetAll(); }
+  });
+
+  // ─── 10. POSTMESSAGE-EMPFAENGER (von Etagen) ──────────────────
+  window.addEventListener('message', (event) => {
+    const data = event.data;
+    if (data && data.type === 'arg.sync') {
+      const from = data.from || 'unbekannt';
+      const payload = data.payload || '';
+      syncInput.value = payload;
+      document.getElementById('fSyncCount').textContent = ++syncCount;
+      // In Aufzug-Log schreiben
+      if (Aufzug.log) {
+        Aufzug.log(`📨 Empfangen von ${from}: ${payload}`);
+      }
+      renderLog();
+    }
+    if (data && data.type === 'etage.ready') {
+      const from = data.from || 'unbekannt';
+      // Etage in COORD nachtragen, falls nicht vorhanden
+      if (!COORD.get(from)) {
+        const idx = Aufzug.FLOORS.findIndex(f => f.id === from);
+        COORD.register(from, idx + 1, 0, 0);
+        renderCoords();
+        renderFloors();
+      }
+    }
+  });
+
+  // ─── 11. INIT ──────────────────────────────────────────────────
+  function init() {
+    // Aufzug initialisieren (falls vorhanden)
+    if (Aufzug.init) {
+      Aufzug.init({ currentId: 'root', basePath: '' });
+    }
+
+    renderFloors();
+    renderCoords();
+    renderLog();
+
+    document.getElementById('fSyncCount').textContent = '0';
+    document.getElementById('ledSystem').className = 'led on';
+    document.getElementById('ledReich').className = 'led pulse';
+
+    // Begrüßung
+    const welcome = {
+      time: new Date().toLocaleTimeString('de-DE'),
+      floor: '🛗 ROOT',
+      msg: '🌀 STAGE‑Reich · Corridor · Legitimation · bereit'
+    };
+    if (Aufzug.getSharedLog && Array.isArray(Aufzug.getSharedLog())) {
+      Aufzug.getSharedLog().push(welcome);
+    }
+    renderLog();
+
+    console.log('🌀 STAGE‑Reich initialisiert');
+    console.log('📐 Achsen:', Object.keys(COORD.axes || {}));
+    console.log('🏢 Stages:', Object.keys(COORD.stages || {}));
+    console.log('⌨️  s=Sync  b=Broadcast  r=Reset');
+  }
+
+  // Warten, bis alle Skripte geladen sind
+  if (document.readyState === 'complete') {
+    init();
   } else {
-    scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
-    scannerEl.style.boxShadow = 'none';
-    document.getElementById('btnScan').textContent = '🔍 SCAN';
-    setRespoStatus('synthesis');
-    setCenterInfo('RESPO.synthesis · GEO.TRANS');
+    window.addEventListener('load', init);
   }
-}
-
-// ── CONTROLS (Legacy) ──
-document.getElementById('btnReset').onclick = runReset;
-document.getElementById('btnRotate').onclick = toggleRotate;
-document.getElementById('btnFreq').onclick = toggleFreq;
-document.getElementById('btnScan').onclick = toggleScan;
-document.getElementById('btnHelp').onclick = runHelp;
-document.getElementById('btnError').onclick = runError;
-document.getElementById('btnSense').onclick = runSense;
-document.getElementById('btnWraight').onclick = runWraight;
-document.getElementById('btnCoach').onclick = runCoach;
-document.getElementById('btnTmp').onclick = runTmp;
-document.getElementById('btnFull').onclick = runFull;
-document.getElementById('btnMxu').onclick = runMxu;
-document.getElementById('btnPenth').onclick = goPenthouse;
-
-// ── TASTATUR (Legacy + KlicK) ──
-document.addEventListener('keydown', (e) => {
-  if (e.key === ' ' || e.key === 'Space') {
-    e.preventDefault();
-    if (window.economy) window.economy.addKlick(1);
-    // zusätzlich Klick-Effekt
-  }
-  if (e.key === 'r' || e.key === 'R') runReset();
-  if (e.key === 'f' || e.key === 'F') toggleFreq();
-  if (e.key === 's' || e.key === 'S') toggleScan();
-  if (e.key === 'h' || e.key === 'H') runHelp();
-  if (e.key === 'e' || e.key === 'E') runError();
-  if (e.key === 'w' || e.key === 'W') runWraight();
-  if (e.key === 'c' || e.key === 'C') runCoach();
-  if (e.key === 't' || e.key === 'T') runTmp();
-  if (e.key === 'f' || e.key === 'F') runFull();
-  if (e.key === 'm' || e.key === 'M') runMxu();
-  if (e.key === 'p' || e.key === 'P') goPenthouse();
-});
-
-// ── AUTO‑KLICK über Schieberegler ──
-let autoInterval = null;
-document.getElementById('autoSpeed').addEventListener('input', function() {
-  const val = parseInt(this.value);
-  if (autoInterval) clearInterval(autoInterval);
-  if (val > 0) {
-    const interval = Math.max(100, 1000 / val);
-    autoInterval = setInterval(() => {
-      if (window.economy) window.economy.addKlick(1);
-    }, interval);
-  } else {
-    autoInterval = null;
-  }
-});
-
-// ── INIT ──
-buildTmpRooms();
-buildFreqParticles();
-startRotate();
-setCenterInfo('🏠 PENTHOUSE 6.0 · KLICK & ZACK · bereit');
-console.log('🏠 PENTHOUSE 6.0 · KLICK & ZACK · geladen');
 </script>
+
 </body>
 </html>
