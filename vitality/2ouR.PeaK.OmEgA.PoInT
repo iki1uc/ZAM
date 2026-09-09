@@ -5,10 +5,8 @@ all(
                 %(
                     °(
                         =(
-                            .(
-                                continuum
-                            )
-                            our
+                            .(3)        // continuum
+                            9           // our
                         )
                         2u
                     )
@@ -16,8 +14,7 @@ all(
                 )
                 OURu
             )
-            vitality.u
+            81              // vitality.u
         )
     )
 )
-
