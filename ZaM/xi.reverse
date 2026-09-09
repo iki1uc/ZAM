@@ -1,1 +1,26 @@
+export function BRIDGE_MULTI_READY(LAGE){
 
+    // 27 – Rückführung
+    const bridge = {
+        ...LAGE,
+        bridge: 27,
+        modi: "bridge"
+    };
+
+    // 756 – Hyperfeld
+    const multi = {
+        ...bridge,
+        multi: 756,
+        modi: "bridge.multi"
+    };
+
+    // ◎ – Zentralknoten
+    const ready = {
+        ...multi,
+        ready: "◎",
+        modi: "bridge.multi.ready",
+        active: true
+    };
+
+    return ready;
+}
