@@ -1,1 +1,13 @@
+import { OI_REVERSE } from "./oi.reverse";
+
+export function vitality_output_reverse(){
+    const oi = OI_REVERSE();
+    return {
+        output: oi.out,
+        reverse: oi.rev,
+        base: oi.in,
+        modi: "vitality.output.reverse",
+        active: true
+    };
+}
 
